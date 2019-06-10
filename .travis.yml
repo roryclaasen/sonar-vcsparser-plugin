@@ -1,0 +1,27 @@
+language: java
+sudo: false
+jdk:
+  - oraclejdk8
+
+cache:
+  directories:
+    - $HOME/.m2
+
+install:
+  - mvn '-Dproject.build.id=${TRAVIS_BUILD_NUMBER}' install -DskipTests=true -Dmaven.javadoc.skip=true -V
+
+script:
+  - mvn '-Dproject.build.id=${TRAVIS_BUILD_NUMBER}' verify
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+
+deploy:
+  provider: releases
+  api_key: $GH_TOKEN
+  file_glob: true
+  file: target/*.jar
+  skip_cleanup: true
+  on:
+    tags: true
+    branch: master

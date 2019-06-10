@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>dev.roryclaasen</groupId>
+    <artifactId>sonar-vcsparser-plugin</artifactId>
+    <version>0.0.1</version>
+
+    <packaging>sonar-plugin</packaging>
+
+    <name>Sonar Vcsparser Plugin</name>
+    <description>Vcsparser Extensions</description>
+    <url>https://github.com/roryclaasen/sonar-vcsparser-plugin</url>
+    <inceptionYear>2019</inceptionYear>
+
+    <licenses>
+        <license>
+            <name>MIT</name>
+            <url>https://github.com/roryclaasen/sonar-vcsparser-plugin/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>roryclaasen</id>
+            <name>Rory Claasen</name>
+            <email>contact@roryclaasen.dev</email>
+            <url>roryclaasen.dev</url>
+        </developer>
+    </developers>
+
+    <contributors></contributors>
+
+    <properties>
+        <project.build.id>SNAPSHOT</project.build.id>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jdk.min.version>1.8</jdk.min.version>
+        <sonar.pluginClass>dev.roryclaasen.vcsparser.VcsparserExtensionsPlugin</sonar.pluginClass>
+        <sonar.api.version>6.7.4</sonar.api.version>
+        <sonar.testing.version>${sonar.api.version}</sonar.testing.version>
+        <sonar.packaging.version>1.18.0.372</sonar.packaging.version>
+        <junit.jupiter.version>5.4.2</junit.jupiter.version>
+        <mockito.version>2.27.0</mockito.version>
+        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.surefire.version>2.22.1</maven.surefire.version>
+        <jacoco.version>0.8.3</jacoco.version>
+    </properties>
+
+    <scm>
+        <connection>scm:git:https://github.com/roryclaasen/sonar-vcsparser-plugin.git</connection>
+        <developerConnection>scm:git:https://github.com/roryclaasen/sonar-vcsparser-plugin.git</developerConnection>
+        <url>https://github.com/roryclaasen/sonar-vcsparser-plugin</url>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/roryclaasen/sonar-vcsparser-plugin/issues</url>
+    </issueManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-plugin-api</artifactId>
+            <version>${sonar.api.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.sonarsource.sonarqube</groupId>
+            <artifactId>sonar-testing-harness</artifactId>
+            <version>${sonar.testing.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit.jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}.${project.build.id}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <source>${jdk.min.version}</source>
+                    <target>${jdk.min.version}</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.sonar-packaging-maven-plugin</groupId>
+                <artifactId>sonar-packaging-maven-plugin</artifactId>
+                <version>${sonar.packaging.version}</version>
+                <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <skip>${maven.test.skip}</skip>
+                    <excludes>
+                        <exclude>**/ObjectFactory.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jacoco-initialize</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-site</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>./</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>

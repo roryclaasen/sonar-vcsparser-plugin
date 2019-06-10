@@ -23,6 +23,6 @@ public class TestPluginMetrics {
 	void givenBugMetrics_whenGetMetrics_thenReturnListOfMetrics() {
 		@SuppressWarnings("rawtypes") List<Metric> metrics = pluginMetrics.getMetrics();
 
-		assertEquals(0, metrics.size());
+		assertEquals(6, metrics.size());
 	}
 }

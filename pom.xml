@@ -39,8 +39,10 @@
         <jdk.min.version>1.8</jdk.min.version>
         <sonar.pluginClass>dev.roryclaasen.vcsparser.VcsparserExtensionsPlugin</sonar.pluginClass>
         <sonar.api.version>6.7.4</sonar.api.version>
-        <sonar.testing.version>${sonar.api.version}</sonar.testing.version>
         <sonar.packaging.version>1.18.0.372</sonar.packaging.version>
+        <json.version>20180813</json.version>
+        <apache.commons.lang.version>3.9</apache.commons.lang.version>
+        <google.guava.version>27.1-jre</google.guava.version>
         <junit.jupiter.version>5.4.2</junit.jupiter.version>
         <mockito.version>2.27.0</mockito.version>
         <maven.compiler.version>3.8.0</maven.compiler.version>
@@ -67,10 +69,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.sonarsource.sonarqube</groupId>
-            <artifactId>sonar-testing-harness</artifactId>
-            <version>${sonar.testing.version}</version>
-            <scope>test</scope>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>${json.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${apache.commons.lang.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google.guava.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

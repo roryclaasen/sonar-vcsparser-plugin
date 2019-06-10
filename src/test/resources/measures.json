@@ -1,0 +1,10 @@
+{
+	"metrics": [
+		{
+			"key": "metric1",
+			"name": "Metric 1",
+			"description": "Description Metric 1",
+			"domain": "Generic Metric"
+		}
+	]
+}

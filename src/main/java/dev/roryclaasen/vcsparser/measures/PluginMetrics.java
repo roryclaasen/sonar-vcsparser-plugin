@@ -20,14 +20,14 @@ import dev.roryclaasen.vcsparser.system.IFileReader;
 
 @SuppressWarnings("rawtypes")
 public class PluginMetrics implements Metrics {
-	private static final Map<String, Metric> Metrics;
+	protected static final Map<String, Metric> Metrics;
 	public static final List<Pair<String, String>> DatePairs;
 
 	public static final String CONFIG_ENV_VARIABLE = "SONAR_VCSPARSER_JSONDATA";
 	public static final String DEFAULT_DOMAIN = "Code Churn";
 
 	public static enum MetricDetails {
-		LinesFixed("vcsparser_linesfixedoverchanged", "Lines fixed/changed", "Lines fixed/changed", DEFAULT_DOMAIN, ValueType.PERCENT, Metric.DIRECTION_NONE, false);
+		linesFixedOverChanged("vcsparser_linesfixedoverchanged", "Lines fixed/changed", "Lines fixed/changed", DEFAULT_DOMAIN, ValueType.PERCENT, Metric.DIRECTION_NONE, false);
 
 		private String key;
 		private String name;
@@ -86,7 +86,7 @@ public class PluginMetrics implements Metrics {
 				.create();
 	}
 
-	public static void load(IEnvironment environment, IFileReader fileReader) {
+	public static void loadAndAlter(IEnvironment environment, IFileReader fileReader) {
 		String environmentVariable = environment.getEnvironmentVariable(CONFIG_ENV_VARIABLE);
 
 		if (environmentVariable == null)

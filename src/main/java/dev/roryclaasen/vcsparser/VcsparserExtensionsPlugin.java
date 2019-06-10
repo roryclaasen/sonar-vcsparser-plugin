@@ -33,7 +33,7 @@ public class VcsparserExtensionsPlugin implements Plugin {
 	public void define(Context context) {
 		log.debug("Registering Vcsparser Extensions");
 		
-		PluginMetrics.load(environment, fileReader);
+		PluginMetrics.loadAndAlter(environment, fileReader);
 		context.addExtension(PluginMetrics.class);
 		context.addExtension(LinesFixedOverChangedComputer.class);
 	}

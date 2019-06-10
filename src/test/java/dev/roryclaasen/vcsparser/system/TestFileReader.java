@@ -20,14 +20,14 @@ public class TestFileReader {
 	}
 
 	@Test
-	void whenReadingFileAndFileDoesNotExistShouldReturnEmptyString() {
+	void givenFileReader_whenReadingFileAndFileDoesNotExistShouldReturnEmptyString() {
 		String jsonString = fileReader.readFile("");
 
 		assertNull(jsonString);
 	}
 
 	@Test
-	void whenReadingFileAndFileExistsShouldReturnContent() {
+	void givenFileReader_whenReadingFileAndFileExistsShouldReturnContent() {
 		ClassLoader classLoader = getClass().getClassLoader();
 		File file = new File(classLoader.getResource("measures.json").getFile());
 

@@ -3,7 +3,8 @@
 
 package dev.roryclaasen.vcsparser;
 
-import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.sonar.api.Plugin.Context;
 
+import dev.roryclaasen.vcsparser.measures.LinesFixedOverChangedComputer;
 import dev.roryclaasen.vcsparser.measures.PluginMetrics;
+import dev.roryclaasen.vcsparser.system.IEnvironment;
+import dev.roryclaasen.vcsparser.system.IFileReader;
 
 public class TestVcsparserExtentionsPlugin {
 	private VcsparserExtensionsPlugin plugin;
@@ -19,17 +23,26 @@ public class TestVcsparserExtentionsPlugin {
 	@Mock
 	private Context context;
 
+	@Mock
+	private IEnvironment environment;
+
+	@Mock
+	private IFileReader fileReader;
+
 	@BeforeEach
 	void setUp() {
 		MockitoAnnotations.initMocks(this);
 
-		plugin = new VcsparserExtensionsPlugin();
+		when(environment.getEnvironmentVariable(anyString())).thenReturn(null);
+
+		plugin = new VcsparserExtensionsPlugin(environment, fileReader);
 	}
 
 	@Test
-	void givenBugPredictionPlugin_whenDefine_thenAddExtensions() {
+	void givenVcsparserExtentionsPlugin_whenDefine_thenAddExtensions() {
 		plugin.define(context);
 
 		verify(context).addExtension(PluginMetrics.class);
+		verify(context).addExtension(LinesFixedOverChangedComputer.class);
 	}
 }

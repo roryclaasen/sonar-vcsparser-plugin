@@ -17,7 +17,7 @@ public class TestEnvironment {
 	}
 
 	@Test
-	void whenGettingExistingVariableShouldReturnValue() {
+	void givenEnvironment_whenGettingExistingVariableShouldReturnValue() {
 		assertNotNull(environment.getEnvironmentVariable("PATH"));
 	}
 }

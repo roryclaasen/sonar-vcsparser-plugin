@@ -38,7 +38,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <jdk.min.version>1.8</jdk.min.version>
         <sonar.pluginClass>dev.roryclaasen.vcsparser.VcsparserExtensionsPlugin</sonar.pluginClass>
-        <sonar.api.version>6.7.4</sonar.api.version>
+        <sonar.api.version>7.7</sonar.api.version>
         <sonar.packaging.version>1.18.0.372</sonar.packaging.version>
         <json.version>20180813</json.version>
         <apache.commons.lang.version>3.9</apache.commons.lang.version>

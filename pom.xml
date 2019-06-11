@@ -49,6 +49,16 @@
         <maven.surefire.version>2.22.1</maven.surefire.version>
         <mycila.license.version>3.0</mycila.license.version>
         <jacoco.version>0.8.3</jacoco.version>
+        <!-- sonar-project.properties -->
+        <sonar.projetName>${project.name}</sonar.projetName>
+        <sonar.links.homepage>${project.url}</sonar.links.homepage>
+        <sonar.links.issue>${project.issueManagement.url}</sonar.links.issue>
+        <sonar.links.scm>${project.scm.url}</sonar.links.scm>
+        <sonar.sources>src/main</sonar.sources>
+        <sonar.tests>src/test</sonar.tests>
+        <sonar.exclusions>pom.xml,headerDefinition.xml</sonar.exclusions>
+        <sonar.java.binaries>target/classes</sonar.java.binaries>
+        <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
     </properties>
 
     <scm>
@@ -146,7 +156,7 @@
                         <exclude>**/README.md</exclude>
                         <exclude>**/LICENSE</exclude>
                         <exclude>**/pom.xml</exclude>
-                        <exclude>**/sonar-project.properties</exclude>
+                        <exclude>**/appveyor.yml</exclude>
                         <exclude>**/headerDefinition.xml</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>

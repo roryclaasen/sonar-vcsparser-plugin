@@ -1,0 +1,44 @@
+version: '{build}'
+
+environment:
+  SONAR_TOKEN:
+    secure: yarBTMzS9XZFPKsrJ3PFYhpcuqPcJeETXvl5JVnxRCKBS7K4X/Ut88dIdNXw4ZP6
+  SONAR_PROJECT_KEY: sonar-vcsparser-plugin
+  SONAR_HOST_URL: https://sonarcloud.io
+  SONAR_ORGANIZATION: roryclaasen-github
+
+cache:
+  - '%USERPROFILE%\.m2'
+  - '%USERPROFILE%\.sonar\cache'
+
+build_script:
+  - ps: mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" clean install "-DskipTests=true" "-Dmaven.javadoc.skip=true" -V
+
+test_script:
+  - ps: mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" verify -e
+
+after_test:
+  - ps: |
+        $wc = New-Object 'System.Net.WebClient'
+        Get-ChildItem . -Name -Recurse 'TEST-*.xml' |
+        Foreach-Object {
+          $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $_))
+        }
+  - ps: mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" sonar:sonar "-Dsonar.projectKey=$env:SONAR_PROJECT_KEY" "-Dsonar.host.url=$env:SONAR_HOST_URL" "-Dsonar.organization=$env:SONAR_ORGANIZATION"
+  - ps: |
+        $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
+        Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+        bash codecov.sh
+
+artifacts:
+  - path: 'target\*.jar'
+    name: Plugin
+
+deploy:
+  - provider: GitHub
+    auth_token:
+      secure: G0czgyQ/fEhnzY4D7yQ/6ZBq3ViTBFVJTOfc6wZ+w7vISamtIQmnPb1YxQcA819B
+    artifact: target/*.jar
+    on:
+      branch: master
+      APPVEYOR_REPO_TAG: true

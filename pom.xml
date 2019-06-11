@@ -47,6 +47,7 @@
         <mockito.version>2.27.0</mockito.version>
         <maven.compiler.version>3.8.0</maven.compiler.version>
         <maven.surefire.version>2.22.1</maven.surefire.version>
+        <mycila.license.version>3.0</mycila.license.version>
         <jacoco.version>0.8.3</jacoco.version>
     </properties>
 
@@ -101,6 +102,14 @@
 
     <build>
         <finalName>${project.artifactId}-${project.version}.${project.build.id}</finalName>
+        <resources>
+            <resource>
+                <directory>./</directory>
+                <includes>
+                    <include>LICENSE</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -120,6 +129,36 @@
                 <artifactId>sonar-packaging-maven-plugin</artifactId>
                 <version>${sonar.packaging.version}</version>
                 <extensions>true</extensions>
+            </plugin>
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>${mycila.license.version}</version>
+                <configuration>
+                    <header>src/main/resources/header.txt</header>
+                    <headerDefinitions>
+                        <headerDefinition>headerDefinition.xml</headerDefinition>
+                    </headerDefinitions>
+                    <mapping>
+                        <java>SINGLE_LINE_DOUBLESLASH_STYLE</java>
+                    </mapping>
+                    <excludes>
+                        <exclude>**/README.md</exclude>
+                        <exclude>**/LICENSE</exclude>
+                        <exclude>**/pom.xml</exclude>
+                        <exclude>**/headerDefinition.xml</exclude>
+                        <exclude>src/test/resources/**</exclude>
+                        <exclude>src/main/resources/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>license-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -148,16 +187,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <resources>
-            <resource>
-                <directory>./</directory>
-                <includes>
-                    <include>LICENSE</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/test/resources</directory>
-            </resource>
-        </resources>
     </build>
 </project>

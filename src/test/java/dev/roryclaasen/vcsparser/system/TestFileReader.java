@@ -29,7 +29,7 @@ public class TestFileReader {
 	@Test
 	void givenFileReader_whenReadingFileAndFileExistsShouldReturnContent() {
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		File file = new File(classLoader.getResource("measures.json").getFile());
+		File file = new File(classLoader.getResource("measures.example.json").getFile());
 
 		String jsonString = fileReader.readFile(file.getAbsolutePath());
 

@@ -10,7 +10,7 @@
     <packaging>sonar-plugin</packaging>
 
     <name>Sonar Vcsparser Plugin</name>
-    <description>Vcsparser Extensions</description>
+    <description>Vcsparser Extensions for SonarQube</description>
     <url>https://github.com/roryclaasen/sonar-vcsparser-plugin</url>
     <inceptionYear>2019</inceptionYear>
 
@@ -146,6 +146,7 @@
                         <exclude>**/README.md</exclude>
                         <exclude>**/LICENSE</exclude>
                         <exclude>**/pom.xml</exclude>
+                        <exclude>**/sonar-project.properties</exclude>
                         <exclude>**/headerDefinition.xml</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>

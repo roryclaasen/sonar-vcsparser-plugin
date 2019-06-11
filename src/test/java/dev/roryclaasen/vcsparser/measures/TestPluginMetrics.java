@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -115,7 +115,12 @@ public class TestPluginMetrics {
 	void givenPluginMetrics_whenLoadAndAlterAndNoMetricWithKey_thenDoNotThrow() {
 		when(fileReader.readFile(SomeFilePath)).thenReturn("{\"metrics\":[{\"key\":\"metric_key_not_in_map\"}]}");
 
-		PluginMetrics.loadAndAlter(environment, fileReader);
+		try {
+			PluginMetrics.loadAndAlter(environment, fileReader);
+			assertTrue(Boolean.TRUE);
+		} catch (Exception e) {
+			fail(e.getMessage());
+		}
 	}
 
 	@Test
@@ -152,7 +157,7 @@ public class TestPluginMetrics {
 	void givenPluginMetrics_whenGetAllDatesForMetric_thenReturnListOfKeys() {
 		String someKey = "someKey";
 
-		String[] keys = PluginMetrics.GetAllDatesForMetric(someKey);
+		String[] keys = PluginMetrics.getAllDatesForMetric(someKey);
 
 		assertEquals(PluginMetrics.DatePairs.size(), keys.length);
 	}

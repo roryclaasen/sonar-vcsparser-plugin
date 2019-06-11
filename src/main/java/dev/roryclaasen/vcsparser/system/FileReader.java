@@ -16,7 +16,7 @@ import org.sonar.api.utils.log.Loggers;
 
 public class FileReader implements IFileReader {
 
-	private final Logger LOG = Loggers.get(FileReader.class);
+	private final Logger log = Loggers.get(FileReader.class);
 
 	@SuppressWarnings("resource")
 	@Override
@@ -26,7 +26,7 @@ public class FileReader implements IFileReader {
 			InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
 			return new BufferedReader(reader).lines().collect(Collectors.joining());
 		} catch (FileNotFoundException e) {
-			LOG.error("Could not read file: " + fileName);
+			log.error("Could not read file: " + fileName);
 			return null;
 		}
 	}

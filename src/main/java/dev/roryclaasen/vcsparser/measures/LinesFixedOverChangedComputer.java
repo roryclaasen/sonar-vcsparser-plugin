@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static dev.roryclaasen.vcsparser.measures.PluginMetrics.GetAllDatesForMetric;
+import static dev.roryclaasen.vcsparser.measures.PluginMetrics.getAllDatesForMetric;
 
 import org.sonar.api.ce.ComputeEngineSide;
 import org.sonar.api.ce.measure.Measure;
@@ -16,10 +16,10 @@ import dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDetails;
 @ComputeEngineSide
 public class LinesFixedOverChangedComputer implements MeasureComputer {
 
-	private String[] linesChanged = GetAllDatesForMetric("vcsparser_lineschanged");
-	private String[] linesChangedFixed = GetAllDatesForMetric("vcsparser_lineschanged_fixes");
+	private String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
+	private String[] linesChangedFixed = getAllDatesForMetric("vcsparser_lineschanged_fixes");
 
-	private String[] linesFixedOverChanged = MetricDetails.linesFixedOverChanged.getKeyAllDates();
+	private String[] linesFixedOverChanged = MetricDetails.LINES_FIXED_OVER_CHANGED.getKeyAllDates();
 
 	@Override
 	public MeasureComputerDefinition define(MeasureComputerDefinitionContext defContext) {
@@ -37,14 +37,14 @@ public class LinesFixedOverChangedComputer implements MeasureComputer {
 	}
 
 	protected void compute(MeasureComputerContext context, String linesChangedKey, String linesChangedFixedKey, String linesFixedOverChangedKey) {
-		Measure linesChanged = context.getMeasure(linesChangedKey);
-		Measure linesChangedFixed = context.getMeasure(linesChangedFixedKey);
+		Measure linesChangedMeasure = context.getMeasure(linesChangedKey);
+		Measure linesChangedFixedMeasure = context.getMeasure(linesChangedFixedKey);
 
-		if (linesChanged == null)
+		if (linesChangedMeasure == null)
 			return;
 
-		int linesChangedValue = linesChanged.getIntValue();
-		int linesChangedFixedValue = (linesChangedFixed != null) ? linesChangedFixed.getIntValue() : 0;
+		int linesChangedValue = linesChangedMeasure.getIntValue();
+		int linesChangedFixedValue = (linesChangedFixedMeasure != null) ? linesChangedFixedMeasure.getIntValue() : 0;
 
 		if (linesChangedValue == 0)
 			return;

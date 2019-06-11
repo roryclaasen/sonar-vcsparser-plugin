@@ -26,8 +26,8 @@ public class PluginMetrics implements Metrics {
 	public static final String CONFIG_ENV_VARIABLE = "SONAR_VCSPARSER_JSONDATA";
 	public static final String DEFAULT_DOMAIN = "Code Churn";
 
-	public static enum MetricDetails {
-		linesFixedOverChanged("vcsparser_linesfixedoverchanged", "Lines fixed/changed", "Lines fixed/changed", DEFAULT_DOMAIN, ValueType.PERCENT, Metric.DIRECTION_NONE, false);
+	public enum MetricDetails {
+		LINES_FIXED_OVER_CHANGED("vcsparser_linesfixedoverchanged", "Lines fixed/changed", "Lines fixed/changed", DEFAULT_DOMAIN, ValueType.PERCENT, Metric.DIRECTION_NONE, false);
 
 		private String key;
 		private String name;
@@ -48,11 +48,11 @@ public class PluginMetrics implements Metrics {
 		}
 
 		public String[] getKeyAllDates() {
-			return GetAllDatesForMetric(this.key);
+			return getAllDatesForMetric(this.key);
 		}
 	}
 
-	public static String[] GetAllDatesForMetric(String key) {
+	public static String[] getAllDatesForMetric(String key) {
 		List<String> keys = new ArrayList<String>();
 		for (Pair<String, String> date : DatePairs) {
 			keys.add(key + date.getLeft());
@@ -72,12 +72,12 @@ public class PluginMetrics implements Metrics {
 		Metrics = new HashMap<String, Metric>();
 		for (MetricDetails details : MetricDetails.values()) {
 			for (Pair<String, String> date : DatePairs) {
-				Metrics.put(details.key + date.getLeft(), CreateMetric(details, date.getLeft(), date.getRight()));
+				Metrics.put(details.key + date.getLeft(), createMetric(details, date.getLeft(), date.getRight()));
 			}
 		}
 	}
 
-	private static Metric CreateMetric(MetricDetails details, String keySuffix, String nameSuffix) {
+	private static Metric createMetric(MetricDetails details, String keySuffix, String nameSuffix) {
 		return new Metric.Builder(details.key + keySuffix, details.name + nameSuffix, details.valueType)
 				.setDescription(details.description + nameSuffix)
 				.setDomain(details.domain)

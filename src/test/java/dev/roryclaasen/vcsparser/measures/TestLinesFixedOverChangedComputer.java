@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static dev.roryclaasen.vcsparser.measures.PluginMetrics.GetAllDatesForMetric;
+import static dev.roryclaasen.vcsparser.measures.PluginMetrics.getAllDatesForMetric;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -104,7 +104,7 @@ public class TestLinesFixedOverChangedComputer {
 
 	@Test
 	void givenLinesFixedOverChangedComputer_whenCompute_LoopThroughDates() {
-		String[] linesChanged = GetAllDatesForMetric("vcsparser_lineschanged");
+		String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
 
 		computer.compute(context);
 

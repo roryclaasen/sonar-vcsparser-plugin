@@ -19,20 +19,24 @@ public class VcsparserExtensionsPlugin implements Plugin {
 
 	private IEnvironment environment;
 	private IFileReader fileReader;
-	
+
 	public VcsparserExtensionsPlugin() {
-		this(new Environment(), new FileReader());
+		this.environment = new Environment();
+		this.fileReader = new FileReader();
 	}
 
-	public VcsparserExtensionsPlugin(IEnvironment environment, IFileReader fileReader) {
+	public void setEnvironment(IEnvironment environment) {
 		this.environment = environment;
+	}
+
+	public void setFileReader(IFileReader fileReader) {
 		this.fileReader = fileReader;
 	}
 
 	@Override
 	public void define(Context context) {
 		log.debug("Registering Vcsparser Extensions");
-		
+
 		PluginMetrics.loadAndAlter(environment, fileReader);
 		context.addExtension(PluginMetrics.class);
 		context.addExtension(LinesFixedOverChangedComputer.class);

@@ -35,7 +35,9 @@ public class TestVcsparserExtentionsPlugin {
 
 		when(environment.getEnvironmentVariable(anyString())).thenReturn(null);
 
-		plugin = new VcsparserExtensionsPlugin(environment, fileReader);
+		plugin = new VcsparserExtensionsPlugin();
+		plugin.setEnvironment(environment);
+		plugin.setFileReader(fileReader);
 	}
 
 	@Test

@@ -3,10 +3,9 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -148,13 +147,13 @@ public class TestPluginMetrics {
 
 		assertEquals(PluginMetrics.Metrics.get(someMetricKey).getDomain(), domain);
 	}
-	
+
 	@Test
 	void givenPluginMetrics_whenGetAllDatesForMetric_thenReturnListOfKeys() {
 		String someKey = "someKey";
-		
+
 		String[] keys = PluginMetrics.GetAllDatesForMetric(someKey);
-		
+
 		assertEquals(PluginMetrics.DatePairs.size(), keys.length);
 	}
 }

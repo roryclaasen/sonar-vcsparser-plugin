@@ -4,13 +4,14 @@
 package dev.roryclaasen.vcsparser.measures;
 
 import static dev.roryclaasen.vcsparser.measures.PluginMetrics.GetAllDatesForMetric;
-import static dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDetails;
 
 import org.sonar.api.ce.ComputeEngineSide;
 import org.sonar.api.ce.measure.Measure;
 import org.sonar.api.ce.measure.MeasureComputer;
 
 import com.google.common.collect.ObjectArrays;
+
+import dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDetails;
 
 @ComputeEngineSide
 public class LinesFixedOverChangedComputer implements MeasureComputer {

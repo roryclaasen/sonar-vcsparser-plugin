@@ -46,12 +46,12 @@ public class PluginMetrics implements Metrics {
 			this.direction = direction;
 			this.qualitative = qualitative;
 		}
-		
+
 		public String[] getKeyAllDates() {
 			return GetAllDatesForMetric(this.key);
 		}
 	}
-	
+
 	public static String[] GetAllDatesForMetric(String key) {
 		List<String> keys = new ArrayList<String>();
 		for (Pair<String, String> date : DatePairs) {

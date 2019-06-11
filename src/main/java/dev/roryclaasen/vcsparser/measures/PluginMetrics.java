@@ -21,7 +21,7 @@ import dev.roryclaasen.vcsparser.system.IFileReader;
 @SuppressWarnings("rawtypes")
 public class PluginMetrics implements Metrics {
 	protected static final Map<String, Metric> Metrics;
-	public static final List<Pair<String, String>> DatePairs;
+	protected static final List<Pair<String, String>> DatePairs;
 
 	public static final String CONFIG_ENV_VARIABLE = "SONAR_VCSPARSER_JSONDATA";
 	public static final String DEFAULT_DOMAIN = "Code Churn";

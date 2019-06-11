@@ -8,6 +8,47 @@
 
 Vcsparser Extensions for SonarQube
 
+## Metrics
+
+- Lines Fixed Over Lines Changed (`vcsparser_linesfixedoverchanged_xx`)
+
+### Time Period
+
+Metrics in the list above may be suffixed with `_xx`, this represents that there is a metric for each time period.
+For instance `vcsparser_linesfixedoverchanged_3m` or `vcsparser_linesfixedoverchanged_1d`.
+
+| Period   | Suffix |
+|:---------|:-------|
+| 1 Year   | `_1y`  |
+| 6 Months | `_6m`  |
+| 3 Months | `_3m`  |
+| 30 Days  | `_30d` |
+| 7 Days   | `_7d`  |
+| 1 Day    | `_1d`  |
+
+### Metric Customisation
+
+Options are available to customise the name, description or domain of a metric.
+
+To do so first create a json file in a similar format to bellow. (example [`measures.example.json`](src/test/resources/measures.example.json))
+
+```json
+{
+    "metrics": [
+        {
+            "key": "key_of_metric_to_change",
+            "name": "The new Name of the metric",
+            "description": "The new Description of the metric",
+            "domain": "The new Domain of the metric"
+        }
+    ]
+}
+```
+
+Now set up an environment variable called `SONAR_VCSPARSER_JSONDATA` that points to this file.
+
+Any changes to the json file will require a restart of SonarQube.
+
 ## Prerequisites
 
 - [SonarQube](https://www.sonarqube.org) `>=6.7.4`

@@ -7,8 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class TestFileReader {
 
@@ -28,7 +28,7 @@ public class TestFileReader {
 
 	@Test
 	void givenFileReader_whenReadingFileAndFileExistsShouldReturnContent() {
-		ClassLoader classLoader = getClass().getClassLoader();
+		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		File file = new File(classLoader.getResource("measures.json").getFile());
 
 		String jsonString = fileReader.readFile(file.getAbsolutePath());

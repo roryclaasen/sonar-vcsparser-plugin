@@ -31,20 +31,24 @@ public class LinesFixedOverChangedComputer implements MeasureComputer {
 	@Override
 	public void compute(MeasureComputerContext context) {
 		for (int i = 0; i < linesChanged.length; i++) {
-			Measure linesChanged = context.getMeasure(this.linesChanged[i]);
-			Measure linesChangedFixed = context.getMeasure(this.linesChangedFixed[i]);
-
-			if (linesChanged == null)
-				continue;
-
-			int linesChangedValue = linesChanged.getIntValue();
-			int linesChangedFixedValue = (linesChangedFixed != null) ? linesChangedFixed.getIntValue() : 0;
-
-			if (linesChangedValue == 0)
-				continue;
-
-			double value = (linesChangedFixedValue * 100.0) / linesChangedValue;
-			context.addMeasure(linesFixedOverChanged[i], value);
+			compute(context, linesChanged[i], linesChangedFixed[i], linesFixedOverChanged[i]);
 		}
+	}
+
+	protected void compute(MeasureComputerContext context, String linesChangedKey, String linesChangedFixedKey, String linesFixedOverChangedKey) {
+		Measure linesChanged = context.getMeasure(linesChangedKey);
+		Measure linesChangedFixed = context.getMeasure(linesChangedFixedKey);
+
+		if (linesChanged == null)
+			return;
+
+		int linesChangedValue = linesChanged.getIntValue();
+		int linesChangedFixedValue = (linesChangedFixed != null) ? linesChangedFixed.getIntValue() : 0;
+
+		if (linesChangedValue == 0)
+			return;
+
+		double value = (linesChangedFixedValue * 100.0) / linesChangedValue;
+		context.addMeasure(linesFixedOverChangedKey, value);
 	}
 }

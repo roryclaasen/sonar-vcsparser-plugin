@@ -19,14 +19,16 @@ test_script:
 
 after_test:
   - ps: |
+        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
+          mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" sonar:sonar "-Dsonar.projectKey=$env:SONAR_PROJECT_KEY" "-Dsonar.host.url=$env:SONAR_HOST_URL" "-Dsonar.organization=$env:SONAR_ORGANIZATION"
+        }
+
+on_finish:
+  - ps: |
         $wc = New-Object 'System.Net.WebClient'
         Get-ChildItem . -Name -Recurse 'TEST-*.xml' |
         Foreach-Object {
           $wc.UploadFile("https://ci.appveyor.com/api/testresults/junit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path $_))
-        }
-  - ps: |
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
-          mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" sonar:sonar "-Dsonar.projectKey=$env:SONAR_PROJECT_KEY" "-Dsonar.host.url=$env:SONAR_HOST_URL" "-Dsonar.organization=$env:SONAR_ORGANIZATION"
         }
   - ps: |
         $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
@@ -35,13 +37,13 @@ after_test:
 
 artifacts:
   - path: 'target\*.jar'
-    name: Plugin
+    name: plugin
 
 deploy:
   - provider: GitHub
     auth_token:
       secure: G0czgyQ/fEhnzY4D7yQ/6ZBq3ViTBFVJTOfc6wZ+w7vISamtIQmnPb1YxQcA819B
-    artifact: target/*.jar
+    artifact: plugin
+    force_update: true
     on:
-      branch: master
       APPVEYOR_REPO_TAG: true

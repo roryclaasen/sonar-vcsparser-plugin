@@ -52,7 +52,7 @@ Any changes to the json file will require a restart of SonarQube.
 ## Prerequisites
 
 - [SonarQube](https://www.sonarqube.org) `>=6.7.4`
-- [vcsparser](https://github.com/ericlemes/vcsparser)
+- [vcsparser](https://github.com/ericlemes/vcsparser) `>=1.0.81`
 
 ## Installation
 

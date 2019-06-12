@@ -45,7 +45,7 @@
         <google.guava.version>27.1-jre</google.guava.version>
         <junit.jupiter.version>5.4.2</junit.jupiter.version>
         <mockito.version>2.28.2</mockito.version>
-        <maven.compiler.version>3.8.0</maven.compiler.version>
+        <maven.compiler.version>3.8.1</maven.compiler.version>
         <maven.surefire.version>2.22.2</maven.surefire.version>
         <mycila.license.version>3.0</mycila.license.version>
         <jacoco.version>0.8.4</jacoco.version>

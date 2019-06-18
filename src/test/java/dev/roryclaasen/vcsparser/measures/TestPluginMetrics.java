@@ -9,7 +9,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.sonar.api.measures.Metric;
 
+import dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDates;
 import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
@@ -60,16 +60,16 @@ public class TestPluginMetrics {
 	void givenPluginMetrics_whenClassInitialize_thenCreateListOfDates() {
 		PluginMetrics.Metrics.remove(someMetricKey);
 
-		List<Pair<String, String>> dates = PluginMetrics.DatePairs;
+		MetricDates[] dates = PluginMetrics.MetricDates.values();
 
-		assertEquals(6, dates.size());
+		assertEquals(6, dates.length);
 	}
 
 	@Test
 	void givenPluginMetrics_whenClassInitialize_thenCreateAndPutMetrics() {
 		PluginMetrics.Metrics.remove(someMetricKey);
 
-		int dateSize = PluginMetrics.DatePairs.size();
+		int dateSize = PluginMetrics.MetricDates.values().length;
 		int measureslength = PluginMetrics.MetricDetails.values().length;
 
 		assertEquals(dateSize * measureslength, PluginMetrics.Metrics.size());
@@ -159,6 +159,6 @@ public class TestPluginMetrics {
 
 		String[] keys = PluginMetrics.getAllDatesForMetric(someKey);
 
-		assertEquals(PluginMetrics.DatePairs.size(), keys.length);
+		assertEquals(PluginMetrics.MetricDates.values().length, keys.length);
 	}
 }

@@ -7,6 +7,7 @@ import org.sonar.api.Plugin;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
+import dev.roryclaasen.vcsparser.measures.AuthorsComputer;
 import dev.roryclaasen.vcsparser.measures.LinesFixedOverChangedComputer;
 import dev.roryclaasen.vcsparser.measures.PluginMetrics;
 import dev.roryclaasen.vcsparser.system.Environment;
@@ -40,5 +41,6 @@ public class VcsparserExtensionsPlugin implements Plugin {
 		PluginMetrics.loadAndAlter(environment, fileReader);
 		context.addExtension(PluginMetrics.class);
 		context.addExtension(LinesFixedOverChangedComputer.class);
+		context.addExtension(AuthorsComputer.class);
 	}
 }

@@ -62,7 +62,7 @@ public class TestPluginMetrics {
 
 		MetricDates[] dates = PluginMetrics.MetricDates.values();
 
-		assertEquals(6, dates.length);
+		assertEquals(18, dates.length);
 	}
 
 	@Test

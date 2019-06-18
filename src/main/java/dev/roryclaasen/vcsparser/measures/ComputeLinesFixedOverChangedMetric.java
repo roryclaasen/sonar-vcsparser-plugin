@@ -14,7 +14,7 @@ import com.google.common.collect.ObjectArrays;
 import dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDetails;
 
 @ComputeEngineSide
-public class LinesFixedOverChangedComputer implements MeasureComputer {
+public class ComputeLinesFixedOverChangedMetric implements MeasureComputer {
 	
 	private String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
 	private String[] linesChangedFixed = getAllDatesForMetric("vcsparser_lineschanged_fixes");

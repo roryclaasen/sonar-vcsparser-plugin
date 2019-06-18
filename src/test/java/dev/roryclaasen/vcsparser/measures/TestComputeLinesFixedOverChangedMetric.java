@@ -18,7 +18,7 @@ import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinition;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinition.Builder;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinitionContext;
 
-public class TestLinesFixedOverChangedComputer {
+public class TestComputeLinesFixedOverChangedMetric {
 
 	@Mock
 	private Builder defBuilder;
@@ -35,7 +35,7 @@ public class TestLinesFixedOverChangedComputer {
 	@Mock
 	private Measure measure;
 
-	private LinesFixedOverChangedComputer computer;
+	private ComputeLinesFixedOverChangedMetric computer;
 
 	private final String linesChangedKey = "SomeLinesChangedKey";
 	private final String linesChangedFixedKey = "SomeLinesFixedKey";
@@ -55,7 +55,7 @@ public class TestLinesFixedOverChangedComputer {
 
 		when(measure.getIntValue()).thenReturn(0);
 
-		computer = new LinesFixedOverChangedComputer();
+		computer = new ComputeLinesFixedOverChangedMetric();
 	}
 
 	@Test

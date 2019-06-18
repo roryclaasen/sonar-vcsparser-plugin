@@ -11,6 +11,8 @@ Vcsparser Extensions for SonarQube
 ## Metrics
 
 - Lines Fixed Over Lines Changed (`vcsparser_linesfixedoverchanged_xx`)
+- Number of authors (`vcsparser_numauthors_xx`)
+- Number of authors over 10% contribution (`vcsparser_numauthors10perc_xx`)
 
 ### Time Period
 

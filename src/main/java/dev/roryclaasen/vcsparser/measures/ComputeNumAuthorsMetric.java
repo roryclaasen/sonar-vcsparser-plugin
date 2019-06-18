@@ -30,9 +30,9 @@ import dev.roryclaasen.vcsparser.measures.authors.Author;
 import dev.roryclaasen.vcsparser.measures.authors.AuthorData;
 
 @ComputeEngineSide
-public class AuthorsComputer implements MeasureComputer {
+public class ComputeNumAuthorsMetric implements MeasureComputer {
 
-	private final Logger log = Loggers.get(AuthorsComputer.class);
+	private final Logger log = Loggers.get(ComputeNumAuthorsMetric.class);
 
 	private String authorsData = "vcsparser_authors_data";
 

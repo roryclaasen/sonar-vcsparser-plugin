@@ -61,7 +61,7 @@ public class TestPluginMetrics {
 
 		MetricDates[] dates = PluginMetrics.MetricDates.values();
 
-		assertEquals(18, dates.length);
+		assertEquals(6, dates.length);
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class TestPluginMetrics {
 
 		@SuppressWarnings("rawtypes") List<Metric> metrics = pluginMetrics.getMetrics();
 
-		assertEquals(6, metrics.size());
+		assertEquals(18, metrics.size());
 		// assertEquals(PluginMetrics.Metrics.values(), metrics);
 	}
 

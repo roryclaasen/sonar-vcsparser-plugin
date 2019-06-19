@@ -36,7 +36,7 @@ public class AuthorUtils {
 				authorDataList.add(jsonObjectToAuthorData((JSONObject) object));
 			}
 			return authorDataList;
-		} catch (JSONException | ParseException e) {
+		} catch (Exception e) {
 			log.error("Unable to process authors", e);
 			return null;
 		}

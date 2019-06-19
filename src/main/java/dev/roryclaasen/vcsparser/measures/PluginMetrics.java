@@ -79,7 +79,7 @@ public class PluginMetrics implements Metrics {
 			this.description = description;
 			this.date = date;
 		}
-		
+
 		public Date date() {
 			return date;
 		}
@@ -87,7 +87,7 @@ public class PluginMetrics implements Metrics {
 
 	public static MetricDates getMetricDateFromKey(String key) {
 		String suffix = key.substring(key.lastIndexOf('_'));
-		for(MetricDates date: MetricDates.values()) {
+		for (MetricDates date : MetricDates.values()) {
 			if (date.suffix.equals(suffix))
 				return date;
 		}

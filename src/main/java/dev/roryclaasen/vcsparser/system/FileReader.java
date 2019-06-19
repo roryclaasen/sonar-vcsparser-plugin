@@ -14,7 +14,6 @@ import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
 public class FileReader implements IFileReader {
-
 	private final Logger log = Loggers.get(FileReader.class);
 
 	@Override

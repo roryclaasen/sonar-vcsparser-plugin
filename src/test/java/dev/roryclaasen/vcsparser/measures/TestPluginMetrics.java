@@ -21,7 +21,6 @@ import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
 public class TestPluginMetrics {
-
 	@Mock
 	private IEnvironment environment;
 

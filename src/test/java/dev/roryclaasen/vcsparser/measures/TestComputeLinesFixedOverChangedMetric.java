@@ -19,7 +19,6 @@ import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinition.Builde
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinitionContext;
 
 public class TestComputeLinesFixedOverChangedMetric {
-
 	@Mock
 	private Builder defBuilder;
 

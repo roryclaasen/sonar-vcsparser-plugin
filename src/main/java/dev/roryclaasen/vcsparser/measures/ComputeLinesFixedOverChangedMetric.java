@@ -15,7 +15,6 @@ import dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDetails;
 
 @ComputeEngineSide
 public class ComputeLinesFixedOverChangedMetric implements MeasureComputer {
-	
 	private String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
 	private String[] linesChangedFixed = getAllDatesForMetric("vcsparser_lineschanged_fixes");
 

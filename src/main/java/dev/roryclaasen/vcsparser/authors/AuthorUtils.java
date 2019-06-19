@@ -6,6 +6,7 @@ package dev.roryclaasen.vcsparser.authors;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -21,16 +22,11 @@ import org.sonar.api.utils.log.Loggers;
 public class AuthorUtils {
 	private final Logger log = Loggers.get(AuthorUtils.class);
 
-	private final String DATE_FORMAT = "yyyy/MM/dd";
+	protected static final String DATE_FORMAT = "yyyy/MM/dd";
 	private SimpleDateFormat dateParser = new SimpleDateFormat(DATE_FORMAT);
-
-	public List<Author> getAuthorListAfterDate(List<AuthorData> authorDataList, Date date) {
-		List<Author> datedAuthorDataList = new ArrayList<Author>();
-		for (AuthorData authorData : authorDataList) {
-			if (authorData.date.after(date))
-				datedAuthorDataList.addAll(authorData.authors);
-		}
-		return datedAuthorDataList;
+	
+	public List<AuthorData> jsonStringArrayToAuthorDataList(String jsonStringArray) {
+		return jsonArrayToAuthorDataList(new JSONArray(jsonStringArray));
 	}
 
 	public List<AuthorData> jsonArrayToAuthorDataList(JSONArray authorsArray) {
@@ -45,8 +41,29 @@ public class AuthorUtils {
 			return null;
 		}
 	}
+	
+	public AuthorData jsonObjectToAuthorData(JSONObject object) throws JSONException, ParseException {
+		Date date = dateParser.parse(object.getString("date"));
+		List<Author> authors = new ArrayList<Author>();
+		for (Object authorObj : (JSONArray) object.get("authors")) {
+			JSONObject authorJson = (JSONObject) authorObj;
+			String name = authorJson.getString("author");
+			int changes = authorJson.getInt("number_of_changes");
+			authors.add(new Author(name, changes));
+		}
+		return new AuthorData(date, authors);
+	}
+	
+	public List<Author> getAuthorListAfterDate(Collection<AuthorData> authorDataList, Date date) {
+		List<Author> datedAuthorDataList = new ArrayList<Author>();
+		for (AuthorData authorData : authorDataList) {
+			if (authorData.date.after(date))
+				datedAuthorDataList.addAll(authorData.authors);
+		}
+		return datedAuthorDataList;
+	}
 
-	public Map<String, Integer> getNumChangesPerAuthor(Map<String, Integer> numChanges, List<Author> authors) {
+	public Map<String, Integer> getNumChangesPerAuthor(Map<String, Integer> numChanges, Collection<Author> authors) {
 		for (Author author : authors) {
 			if (!numChanges.containsKey(author.name))
 				numChanges.put(author.name, author.numberOfChanges);
@@ -57,17 +74,5 @@ public class AuthorUtils {
 			}
 		}
 		return numChanges;
-	}
-
-	public AuthorData jsonObjectToAuthorData(JSONObject object) throws JSONException, ParseException {
-		Date date = dateParser.parse(object.getString("Date"));
-		List<Author> authors = new ArrayList<Author>();
-		for (Object authorObj : (JSONArray) object.get("Authors")) {
-			JSONObject authorJson = (JSONObject) authorObj;
-			String name = authorJson.getString("Author");
-			int changes = authorJson.getInt("NumberOfChanges");
-			authors.add(new Author(name, changes));
-		}
-		return new AuthorData(date, authors);
 	}
 }

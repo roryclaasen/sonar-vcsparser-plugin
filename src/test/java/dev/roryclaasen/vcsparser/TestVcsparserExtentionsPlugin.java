@@ -12,9 +12,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.sonar.api.Plugin.Context;
 
+import dev.roryclaasen.vcsparser.authors.AuthorUtils;
 import dev.roryclaasen.vcsparser.measures.ComputeLinesFixedOverChangedMetric;
 import dev.roryclaasen.vcsparser.measures.ComputeNumAuthorsMetric;
-import dev.roryclaasen.vcsparser.measures.PluginMetrics;
+import dev.roryclaasen.vcsparser.metrics.PluginMetrics;
 import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
@@ -46,6 +47,8 @@ public class TestVcsparserExtentionsPlugin {
 		plugin.define(context);
 
 		verify(context).addExtension(PluginMetrics.class);
+		verify(context).addExtension(AuthorUtils.class);
+		verify(context).addExtension(PostProjectAnalysisHook.class);
 		verify(context).addExtension(ComputeLinesFixedOverChangedMetric.class);
 		verify(context).addExtension(ComputeNumAuthorsMetric.class);
 	}

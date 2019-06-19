@@ -1,7 +1,7 @@
 // Copyright (c) Rory Claasen. All rights reserved.
 // Licensed under the MIT License.
 
-package dev.roryclaasen.vcsparser.measures;
+package dev.roryclaasen.vcsparser.metrics;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -16,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.sonar.api.measures.Metric;
 
-import dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDates;
 import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
@@ -56,20 +55,11 @@ public class TestPluginMetrics {
 	}
 
 	@Test
-	void givenPluginMetrics_whenClassInitialize_thenCreateListOfDates() {
-		PluginMetrics.Metrics.remove(someMetricKey);
-
-		MetricDates[] dates = PluginMetrics.MetricDates.values();
-
-		assertEquals(6, dates.length);
-	}
-
-	@Test
 	void givenPluginMetrics_whenClassInitialize_thenCreateAndPutMetrics() {
 		PluginMetrics.Metrics.remove(someMetricKey);
-
-		int dateSize = PluginMetrics.MetricDates.values().length;
-		int measureslength = PluginMetrics.MetricDetails.values().length;
+		
+		int dateSize = MetricDate.values().length;
+		int measureslength = PluginMetric.values().length;
 
 		assertEquals(dateSize * measureslength, PluginMetrics.Metrics.size());
 	}
@@ -81,7 +71,7 @@ public class TestPluginMetrics {
 		@SuppressWarnings("rawtypes") List<Metric> metrics = pluginMetrics.getMetrics();
 
 		assertEquals(18, metrics.size());
-		// assertEquals(PluginMetrics.Metrics.values(), metrics);
+		assertIterableEquals(PluginMetrics.Metrics.values(), metrics);
 	}
 
 	@Test
@@ -150,14 +140,5 @@ public class TestPluginMetrics {
 		PluginMetrics.loadAndAlter(environment, fileReader);
 
 		assertEquals(PluginMetrics.Metrics.get(someMetricKey).getDomain(), domain);
-	}
-
-	@Test
-	void givenPluginMetrics_whenGetAllDatesForMetric_thenReturnListOfKeys() {
-		String someKey = "someKey";
-
-		String[] keys = PluginMetrics.getAllDatesForMetric(someKey);
-
-		assertEquals(PluginMetrics.MetricDates.values().length, keys.length);
 	}
 }

@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static dev.roryclaasen.vcsparser.measures.PluginMetrics.getAllDatesForMetric;
+import static dev.roryclaasen.vcsparser.metrics.MetricUtils.*;
 
 import org.sonar.api.ce.ComputeEngineSide;
 import org.sonar.api.ce.measure.Measure;
@@ -11,14 +11,14 @@ import org.sonar.api.ce.measure.MeasureComputer;
 
 import com.google.common.collect.ObjectArrays;
 
-import dev.roryclaasen.vcsparser.measures.PluginMetrics.MetricDetails;
+import dev.roryclaasen.vcsparser.metrics.PluginMetric;
 
 @ComputeEngineSide
 public class ComputeLinesFixedOverChangedMetric implements MeasureComputer {
 	private String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
 	private String[] linesChangedFixed = getAllDatesForMetric("vcsparser_lineschanged_fixes");
 
-	private String[] linesFixedOverChanged = MetricDetails.LINES_FIXED_OVER_CHANGED.getKeyAllDates();
+	private String[] linesFixedOverChanged = PluginMetric.LINES_FIXED_OVER_CHANGED.getKeyAllDates();
 
 	@Override
 	public MeasureComputerDefinition define(MeasureComputerDefinitionContext defContext) {

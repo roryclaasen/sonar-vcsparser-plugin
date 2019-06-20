@@ -6,7 +6,8 @@ package dev.roryclaasen.vcsparser;
 import org.sonar.api.Plugin;
 import org.sonar.api.utils.log.Logger;
 
-import dev.roryclaasen.vcsparser.authors.AuthorUtils;
+import dev.roryclaasen.vcsparser.authors.AuthorListConverter;
+import dev.roryclaasen.vcsparser.authors.JsonAuthorParser;
 import dev.roryclaasen.vcsparser.measures.ComputeLinesFixedOverChangedMetric;
 import dev.roryclaasen.vcsparser.measures.ComputeNumAuthorsMetric;
 import dev.roryclaasen.vcsparser.metrics.PluginMetrics;
@@ -44,7 +45,8 @@ public class VcsparserExtensionsPlugin implements Plugin {
 
 		context.addExtension(LoggerCreator.class);
 		context.addExtension(PluginMetrics.class);
-		context.addExtension(AuthorUtils.class);
+		context.addExtension(JsonAuthorParser.class);
+		context.addExtension(AuthorListConverter.class);
 
 		context.addExtension(ComputeLinesFixedOverChangedMetric.class);
 		context.addExtension(ComputeNumAuthorsMetric.class);

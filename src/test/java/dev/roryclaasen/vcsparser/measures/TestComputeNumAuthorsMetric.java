@@ -30,7 +30,8 @@ import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinitionContext
 
 import dev.roryclaasen.vcsparser.authors.Author;
 import dev.roryclaasen.vcsparser.authors.AuthorData;
-import dev.roryclaasen.vcsparser.authors.AuthorUtils;
+import dev.roryclaasen.vcsparser.authors.AuthorListConverter;
+import dev.roryclaasen.vcsparser.authors.JsonAuthorParser;
 import dev.roryclaasen.vcsparser.metrics.PluginMetric;
 
 public class TestComputeNumAuthorsMetric {
@@ -53,7 +54,10 @@ public class TestComputeNumAuthorsMetric {
 	private Component component;
 
 	@Mock
-	private AuthorUtils authorUtils;
+	private JsonAuthorParser jsonParser;
+	
+	@Mock
+	private AuthorListConverter converter;
 
 	private ComputeNumAuthorsMetric computer;
 
@@ -90,12 +94,12 @@ public class TestComputeNumAuthorsMetric {
 		authorChangesMap.put("Author 1", 9);
 		authorChangesMap.put("Author 2", 1);
 
-		when(authorUtils.getAuthorListAfterDate(anyList(), any(Date.class))).thenReturn(new ArrayList<Author>());
-		when(authorUtils.getNumChangesPerAuthor(anyMap(), anyList())).thenReturn(authorChangesMap);
+		when(converter.getAuthorListAfterDate(anyList(), any(Date.class))).thenReturn(new ArrayList<Author>());
+		when(converter.getNumChangesPerAuthor(anyMap(), anyList())).thenReturn(authorChangesMap);
 
 		when(measure.getIntValue()).thenReturn(10);
 
-		computer = new ComputeNumAuthorsMetric(authorUtils);
+		computer = new ComputeNumAuthorsMetric(jsonParser, converter);
 		ComputeNumAuthorsMetric.authorsCache.clear();
 	}
 
@@ -132,14 +136,14 @@ public class TestComputeNumAuthorsMetric {
 		Map<String, Integer> authorChangesMap = new HashMap<String, Integer>();
 		Date dateFrom = new Date();
 
-		when(authorUtils.getAuthorListAfterDate(anyList(), any(Date.class))).thenReturn(authorList);
-		when(authorUtils.getNumChangesPerAuthor(anyMap(), anyList())).thenReturn(authorChangesMap);
+		when(converter.getAuthorListAfterDate(anyList(), any(Date.class))).thenReturn(authorList);
+		when(converter.getNumChangesPerAuthor(anyMap(), anyList())).thenReturn(authorChangesMap);
 
 		Map<String, Integer> returnedMap = computer.getAuthorNumChangesAfterDateDict(authorDataList, dateFrom, authorChangesMap);
 
 		assertEquals(authorChangesMap, returnedMap);
-		verify(authorUtils, times(1)).getAuthorListAfterDate(eq(authorDataList), eq(dateFrom));
-		verify(authorUtils, times(1)).getNumChangesPerAuthor(eq(authorChangesMap), eq(authorList));
+		verify(converter, times(1)).getAuthorListAfterDate(eq(authorDataList), eq(dateFrom));
+		verify(converter, times(1)).getNumChangesPerAuthor(eq(authorChangesMap), eq(authorList));
 	}
 
 	@Test
@@ -210,7 +214,7 @@ public class TestComputeNumAuthorsMetric {
 
 	@Test
 	void givenComputeNumAuthorsMetric_whenComputeFileMeasureAndAuthorsDataListEmpty_thenReturn() {
-		when(authorUtils.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(new ArrayList<AuthorData>());
+		when(jsonParser.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(new ArrayList<AuthorData>());
 
 		computer.computeFileMeasure(context, authorsDataKey, numAuthorsKey, numAuthors10PercKey, numChangesKey);
 
@@ -220,7 +224,7 @@ public class TestComputeNumAuthorsMetric {
 	@Test
 	void givenComputeNumAuthorsMetric_whenComputeFileMeasureAndCacheMissingKey_thenAddToCache() {
 		List<AuthorData> authorDataList = Arrays.asList(new AuthorData(new Date(), new ArrayList<Author>()));
-		when(authorUtils.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
+		when(jsonParser.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
 
 		computer.computeFileMeasure(context, authorsDataKey, numAuthorsKey, numAuthors10PercKey, numChangesKey);
 
@@ -231,7 +235,7 @@ public class TestComputeNumAuthorsMetric {
 	@Test
 	void givenComputeNumAuthorsMetric_whenComputeFileMeasureAndCacheHasKey_thenAddToCache() {
 		List<AuthorData> authorDataList = Arrays.asList(new AuthorData(new Date(), new ArrayList<Author>()));
-		when(authorUtils.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
+		when(jsonParser.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
 		ComputeNumAuthorsMetric.authorsCache.put(projectKey, new HashMap<String, List<AuthorData>>());
 
 		computer.computeFileMeasure(context, authorsDataKey, numAuthorsKey, numAuthors10PercKey, numChangesKey);
@@ -243,7 +247,7 @@ public class TestComputeNumAuthorsMetric {
 	@Test
 	void givenComputeNumAuthorsMetric_whenComputeFileMeasureAndAuthorsDatahasItems_thenAddMeasure() {
 		List<AuthorData> authorDataList = Arrays.asList(new AuthorData(new Date(), new ArrayList<Author>()));
-		when(authorUtils.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
+		when(jsonParser.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
 
 		computer.computeFileMeasure(context, authorsDataKey, numAuthorsKey, numAuthors10PercKey, numChangesKey);
 
@@ -281,7 +285,7 @@ public class TestComputeNumAuthorsMetric {
 
 		computer.computeChildMeasure(context, numAuthorsKey, numAuthors10PercKey, numChangesKey);
 
-		verify(authorUtils, times(1)).getAuthorListAfterDate(eq(fileMap.get(componentKey)), any(Date.class));
+		verify(converter, times(1)).getAuthorListAfterDate(eq(fileMap.get(componentKey)), any(Date.class));
 
 		verify(context, times(1)).addMeasure(eq(numAuthorsKey), eq(2));
 		verify(context, times(1)).addMeasure(eq(numAuthors10PercKey), eq(1));
@@ -292,7 +296,7 @@ public class TestComputeNumAuthorsMetric {
 		when(component.getType()).thenReturn(Type.FILE);
 
 		List<AuthorData> authorDataList = Arrays.asList(new AuthorData(new Date(), new ArrayList<Author>()));
-		when(authorUtils.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
+		when(jsonParser.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(authorDataList);
 
 		computer.compute(context);
 

@@ -16,6 +16,22 @@ Vcsparser Extensions for SonarQube
 - Number of authors (`vcsparser_numauthors_xx`)
 - Number of authors over 10% contribution (`vcsparser_numauthors10perc_xx`)
 
+### Metric Requirements
+
+#### Lines Fixed Over Lines Changed
+
+- `vcsparser_lineschanged_xx`
+- `vcsparser_lineschanged_fixes_xx`
+
+#### Number of authors
+
+- `vcsparser_authors_data`
+
+#### Number of authors over 10% contribution
+
+- `vcsparser_authors_data`
+- `vcsparser_numchanges_xx`
+
 ### Time Period
 
 Metrics in the list above may be suffixed with `_xx`, this represents that there is a metric for each time period.
@@ -67,7 +83,7 @@ Any changes to the json file will require a restart of SonarQube.
 ### vcsparser setup
 
 To publish the metrics from vcsparser you may also need [sonar-generic-metrics](https://github.com/ericlemes/sonar-generic-metrics).
-Checkout documentation on [vcsparser](https://github.com/ericlemes/vcsparser#readme) and [sonar-generic-metrics](https://github.com/ericlemes/sonar-generic-metrics#readme).
+View the documentation on [vcsparser](https://github.com/ericlemes/vcsparser#readme) and [sonar-generic-metrics](https://github.com/ericlemes/sonar-generic-metrics#readme) to lean how.
 
 ## License
 

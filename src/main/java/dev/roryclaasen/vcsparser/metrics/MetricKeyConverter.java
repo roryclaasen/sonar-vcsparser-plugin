@@ -6,8 +6,8 @@ package dev.roryclaasen.vcsparser.metrics;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class MetricUtils {
-	private MetricUtils() {}
+public final class MetricKeyConverter {
+	private MetricKeyConverter() {}
 
 	public static MetricDate getMetricDateFromKey(String key) {
 		String suffix = key.substring(key.lastIndexOf('_'));

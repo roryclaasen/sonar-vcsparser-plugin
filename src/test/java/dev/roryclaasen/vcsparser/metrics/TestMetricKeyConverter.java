@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-public class TestMetricUtils {
+public class TestMetricKeyConverter {
 	private final String someKeyWithoutDate = "Some_Metric_Key";
 	
 	@Test
@@ -15,14 +15,14 @@ public class TestMetricUtils {
 		MetricDate date = MetricDate.DAY_1;
 		String key = someKeyWithoutDate + date.getSuffix();
 		
-		MetricDate keyDate = MetricUtils.getMetricDateFromKey(key);
+		MetricDate keyDate = MetricKeyConverter.getMetricDateFromKey(key);
 		
 		assertEquals(date, keyDate);
 	}
 	
 	@Test
 	void givenMetricUtils_whenGetMetricDateFromKeyAndKeyMissingDate_thenReturnNull() {		
-		MetricDate keyDate = MetricUtils.getMetricDateFromKey(someKeyWithoutDate);
+		MetricDate keyDate = MetricKeyConverter.getMetricDateFromKey(someKeyWithoutDate);
 		
 		assertNull(keyDate);
 	}
@@ -31,12 +31,12 @@ public class TestMetricUtils {
 	void givenMetricUtils_whenGetMetricDateFromKeyAndKeyMissingDateAndUnderscores_thenThrow() {
 		String key = "SomeMetricKeyWithoutUnderscores";
 		
-		assertThrows(IndexOutOfBoundsException.class, () -> MetricUtils.getMetricDateFromKey(key));
+		assertThrows(IndexOutOfBoundsException.class, () -> MetricKeyConverter.getMetricDateFromKey(key));
 	}
 	
 	@Test
 	void givenMetricUtils_whenAllDateForMetirc_thenReturnListString() {		
-		String[] keys = MetricUtils.getAllDatesForMetric(someKeyWithoutDate);
+		String[] keys = MetricKeyConverter.getAllDatesForMetric(someKeyWithoutDate);
 		
 		assertEquals(MetricDate.values().length, keys.length);
 		for (String key : keys) {

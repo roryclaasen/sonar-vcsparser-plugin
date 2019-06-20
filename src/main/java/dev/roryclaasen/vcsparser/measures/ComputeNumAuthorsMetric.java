@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static dev.roryclaasen.vcsparser.metrics.MetricUtils.*;
+import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.*;
 
 import java.util.Collection;
 import java.util.Date;
@@ -20,7 +20,8 @@ import com.google.common.collect.ObjectArrays;
 
 import dev.roryclaasen.vcsparser.authors.Author;
 import dev.roryclaasen.vcsparser.authors.AuthorData;
-import dev.roryclaasen.vcsparser.authors.AuthorUtils;
+import dev.roryclaasen.vcsparser.authors.AuthorListConverter;
+import dev.roryclaasen.vcsparser.authors.JsonAuthorParser;
 import dev.roryclaasen.vcsparser.metrics.PluginMetric;
 
 @ComputeEngineSide
@@ -35,10 +36,12 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 
 	private double threshold = 10.0;
 
-	private AuthorUtils authorUtils;
+	private JsonAuthorParser jsonParser;
+	private AuthorListConverter converter;
 
-	public ComputeNumAuthorsMetric(AuthorUtils authorUtils) {
-		this.authorUtils = authorUtils;
+	public ComputeNumAuthorsMetric(JsonAuthorParser jsonParser, AuthorListConverter converter) {
+		this.jsonParser = jsonParser;
+		this.converter = converter;
 	}
 
 	public void removeProjectCache(String projectKey) {
@@ -96,19 +99,19 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 	protected void computeFileMeasure(MeasureComputerContext context, String authorsDataKey, String numAuthorsKey, String numAuthors10PercKey, String numChangesKey) {
 		String currentKey = context.getComponent().getKey();
 		String projectKey = currentKey.split(":", 2)[0];
-		
+
 		Measure authorsDataMeasure = context.getMeasure(authorsDataKey);
 
 		if (authorsDataMeasure == null)
 			return;
 
-		List<AuthorData> authorDataList = authorUtils.jsonStringArrayToAuthorDataList(authorsDataMeasure.getStringValue());
+		List<AuthorData> authorDataList = jsonParser.jsonStringArrayToAuthorDataList(authorsDataMeasure.getStringValue());
 		if (authorDataList.size() == 0)
 			return;
 
 		if (!authorsCache.containsKey(projectKey))
 			authorsCache.put(projectKey, new HashMap<String, List<AuthorData>>());
-		
+
 		authorsCache.get(projectKey).put(currentKey, authorDataList);
 
 		Collection<Integer> authorNumChanges = getAuthorNumChangesAfterDateDict(authorDataList, getMetricDateFromKey(numAuthorsKey).getDate(), new HashMap<String, Integer>()).values();
@@ -118,8 +121,8 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 	}
 
 	protected Map<String, Integer> getAuthorNumChangesAfterDateDict(Collection<AuthorData> authorDataList, Date dateFrom, Map<String, Integer> currentMap) {
-		List<Author> authorList = authorUtils.getAuthorListAfterDate(authorDataList, dateFrom);
-		return authorUtils.getNumChangesPerAuthor(currentMap, authorList);
+		List<Author> authorList = converter.getAuthorListAfterDate(authorDataList, dateFrom);
+		return converter.getNumChangesPerAuthor(currentMap, authorList);
 	}
 
 	protected void computeNumAuthors(MeasureComputerContext context, String numAuthorsKey, Collection<Integer> authorNumChanges) {

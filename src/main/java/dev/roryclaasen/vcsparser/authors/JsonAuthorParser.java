@@ -6,10 +6,8 @@ package dev.roryclaasen.vcsparser.authors;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,14 +18,14 @@ import org.sonar.api.utils.log.Logger;
 import dev.roryclaasen.vcsparser.LoggerCreator;
 
 @ComputeEngineSide
-public class AuthorUtils {
+public class JsonAuthorParser {
 	private final Logger log;
 
 	protected static final String DATE_FORMAT = "yyyy/MM/dd";
 	private SimpleDateFormat dateParser = new SimpleDateFormat(DATE_FORMAT);
 
-	public AuthorUtils(LoggerCreator loggerCreator) {
-		log = loggerCreator.get(AuthorUtils.class);
+	public JsonAuthorParser(LoggerCreator loggerCreator) {
+		log = loggerCreator.get(AuthorListConverter.class);
 	}
 
 	public List<AuthorData> jsonStringArrayToAuthorDataList(String jsonStringArray) {
@@ -57,27 +55,5 @@ public class AuthorUtils {
 			authors.add(new Author(name, changes));
 		}
 		return new AuthorData(date, authors);
-	}
-
-	public List<Author> getAuthorListAfterDate(Collection<AuthorData> authorDataList, Date date) {
-		List<Author> datedAuthorDataList = new ArrayList<Author>();
-		for (AuthorData authorData : authorDataList) {
-			if (authorData.date.after(date))
-				datedAuthorDataList.addAll(authorData.authors);
-		}
-		return datedAuthorDataList;
-	}
-
-	public Map<String, Integer> getNumChangesPerAuthor(Map<String, Integer> numChanges, Collection<Author> authors) {
-		for (Author author : authors) {
-			if (!numChanges.containsKey(author.name))
-				numChanges.put(author.name, author.numberOfChanges);
-			else {
-				int value = numChanges.get(author.name);
-				value += author.numberOfChanges;
-				numChanges.replace(author.name, value);
-			}
-		}
-		return numChanges;
 	}
 }

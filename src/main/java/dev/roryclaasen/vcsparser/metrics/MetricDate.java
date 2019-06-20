@@ -24,20 +24,20 @@ public enum MetricDate {
 		this.description = description;
 		this.date = date;
 	}
-	
+
 	public String getSuffix() {
 		return suffix;
 	}
-	
+
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public Date getDate() {
 		return date;
 	}
 
-	private static Date MinusDate(int year, int month, int day) { 
+	private static Date MinusDate(int year, int month, int day) {
 		Date today = new Date();
 		today = DateUtils.addDays(today, -day);
 		today = DateUtils.addMonths(today, -month);

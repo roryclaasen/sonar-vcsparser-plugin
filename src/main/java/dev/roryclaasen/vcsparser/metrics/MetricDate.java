@@ -3,6 +3,7 @@
 
 package dev.roryclaasen.vcsparser.metrics;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.commons.lang3.time.DateUtils;
@@ -38,7 +39,7 @@ public enum MetricDate {
 	}
 
 	private static Date MinusDate(int year, int month, int day) {
-		Date today = new Date();
+		Date today = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
 		today = DateUtils.addDays(today, -day);
 		today = DateUtils.addMonths(today, -month);
 		today = DateUtils.addYears(today, -year);

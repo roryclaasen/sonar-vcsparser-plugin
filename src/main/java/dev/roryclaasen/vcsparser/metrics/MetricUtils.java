@@ -6,7 +6,9 @@ package dev.roryclaasen.vcsparser.metrics;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MetricUtils {
+public final class MetricUtils {
+	private MetricUtils() {}
+
 	public static MetricDate getMetricDateFromKey(String key) {
 		String suffix = key.substring(key.lastIndexOf('_'));
 		for (MetricDate date : MetricDate.values()) {

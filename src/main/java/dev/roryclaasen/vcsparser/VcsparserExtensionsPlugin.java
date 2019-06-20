@@ -41,11 +41,14 @@ public class VcsparserExtensionsPlugin implements Plugin {
 		log.debug("Registering Vcsparser Extensions");
 
 		PluginMetrics.loadAndAlter(environment, fileReader);
+
 		context.addExtension(LoggerCreator.class);
 		context.addExtension(PluginMetrics.class);
 		context.addExtension(AuthorUtils.class);
-		context.addExtension(PostProjectAnalysisHook.class);
+
 		context.addExtension(ComputeLinesFixedOverChangedMetric.class);
 		context.addExtension(ComputeNumAuthorsMetric.class);
+
+		context.addExtension(PostProjectAnalysisHook.class);
 	}
 }

@@ -56,8 +56,8 @@ public class TestAuthorUtils {
 
 	private JSONObject createJsonAuthor(String name, int numChanges) {
 		JSONObject author = new JSONObject();
-		author.put("author", name);
-		author.put("number_of_changes", numChanges);
+		author.put("Author", name);
+		author.put("NumberOfChanges", numChanges);
 		return author;
 	}
 

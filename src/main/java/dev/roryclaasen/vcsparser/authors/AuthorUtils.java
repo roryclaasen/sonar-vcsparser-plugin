@@ -52,8 +52,8 @@ public class AuthorUtils {
 		List<Author> authors = new ArrayList<Author>();
 		for (Object authorObj : (JSONArray) object.get("authors")) {
 			JSONObject authorJson = (JSONObject) authorObj;
-			String name = authorJson.getString("author");
-			int changes = authorJson.getInt("number_of_changes");
+			String name = authorJson.getString("Author");
+			int changes = authorJson.getInt("NumberOfChanges");
 			authors.add(new Author(name, changes));
 		}
 		return new AuthorData(date, authors);

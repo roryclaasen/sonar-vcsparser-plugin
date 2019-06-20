@@ -27,11 +27,11 @@ public class TestJsonAuthorParser {
 
 	@Mock
 	private Logger logger;
-	
+
 	private SimpleDateFormat dateParser;
-	
+
 	private JsonAuthorParser jsonParser;
-	
+
 	@BeforeEach
 	void SetUp() {
 		MockitoAnnotations.initMocks(this);
@@ -41,7 +41,7 @@ public class TestJsonAuthorParser {
 		dateParser = new SimpleDateFormat(JsonAuthorParser.DATE_FORMAT);
 		jsonParser = new JsonAuthorParser(loggerCreator);
 	}
-	
+
 	private JSONObject createJsonAuthorData(String date, JSONObject... authors) {
 		JSONObject authorData = new JSONObject();
 		authorData.put("date", date);
@@ -59,7 +59,7 @@ public class TestJsonAuthorParser {
 	@Test
 	void givenJsonAuthorParser_whenJsonStringArrayToAuthorDataList_thenReturnListAuthorData() {
 		JSONArray jsonAuthorDataArray = new JSONArray();
-		jsonAuthorDataArray.put(createJsonAuthorData("2019/06/19", createJsonAuthor("Some Author Name", 1)));
+		jsonAuthorDataArray.put(createJsonAuthorData("2019/06/19 00:00:00", createJsonAuthor("Some Author Name", 1)));
 
 		List<AuthorData> result = jsonParser.jsonStringArrayToAuthorDataList(jsonAuthorDataArray.toString());
 
@@ -69,13 +69,13 @@ public class TestJsonAuthorParser {
 	@Test
 	void givenJsonAuthorParser_whenJsonArrayToAuthorDataList_thenReturnListAuthorData() {
 		JSONArray jsonAuthorDataArray = new JSONArray();
-		jsonAuthorDataArray.put(createJsonAuthorData("2019/06/19", createJsonAuthor("Some Author Name", 1)));
+		jsonAuthorDataArray.put(createJsonAuthorData("2019/06/19 00:00:00", createJsonAuthor("Some Author Name", 1)));
 
 		List<AuthorData> result = jsonParser.jsonArrayToAuthorDataList(jsonAuthorDataArray);
 
 		assertEquals(1, result.size());
 	}
-	
+
 	@Test
 	void givenJsonAuthorParser_whenJsonArrayToAuthorDataListThrow_thenReturnNull() {
 		JSONObject someBadJsonObject = new JSONObject();
@@ -90,11 +90,11 @@ public class TestJsonAuthorParser {
 
 	@Test
 	void givenJsonAuthorParser_whenJsonObjectToAuthorData_thenReturnAuthorData() throws JSONException, ParseException {
-		JSONObject jsonAuthorData = createJsonAuthorData("2019/06/19", createJsonAuthor("Some Author Name", 1));
+		JSONObject jsonAuthorData = createJsonAuthorData("2019/06/19 00:00:00", createJsonAuthor("Some Author Name", 1));
 
 		AuthorData authorData = jsonParser.jsonObjectToAuthorData(jsonAuthorData);
 
-		assertEquals("2019/06/19", dateParser.format(authorData.date));
+		assertEquals("2019/06/19 00:00:00", dateParser.format(authorData.date));
 		assertEquals(1, authorData.authors.size());
 		Author author = authorData.authors.get(0);
 		assertEquals("Some Author Name", author.name);
@@ -103,7 +103,7 @@ public class TestJsonAuthorParser {
 
 	@Test
 	void givenJsonAuthorParser_whenJsonObjectToAuthorDataAndDateWrongFormat_thenThrowParseException() {
-		JSONObject jsonAuthorData = createJsonAuthorData("2019-06-19", createJsonAuthor("Some Author Name", 1));
+		JSONObject jsonAuthorData = createJsonAuthorData("2019-06-19 00:00:00", createJsonAuthor("Some Author Name", 1));
 
 		assertThrows(ParseException.class, () -> jsonParser.jsonObjectToAuthorData(jsonAuthorData));
 	}

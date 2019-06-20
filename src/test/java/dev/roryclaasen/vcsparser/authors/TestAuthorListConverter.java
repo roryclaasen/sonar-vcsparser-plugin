@@ -63,7 +63,7 @@ public class TestAuthorListConverter {
 
 		Map<String, Integer> resultMap = converter.getNumChangesPerAuthor(new HashMap<String, Integer>(), Arrays.asList(author1));
 
-		assertEquals(resultMap.get("Some Author 1"), 2);
+		assertEquals(2, resultMap.get("Some Author 1"));
 	}
 
 	@Test
@@ -74,8 +74,8 @@ public class TestAuthorListConverter {
 		Map<String, Integer> resultMap = converter.getNumChangesPerAuthor(new HashMap<String, Integer>(), Arrays.asList(author1, author2));
 
 		assertEquals(2, resultMap.size());
-		assertEquals(resultMap.get("Some Author 1"), 2);
-		assertEquals(resultMap.get("Some Author 2"), 5);
+		assertEquals(2, resultMap.get("Some Author 1"));
+		assertEquals(5, resultMap.get("Some Author 2"));
 	}
 
 	@Test
@@ -87,6 +87,6 @@ public class TestAuthorListConverter {
 
 		Map<String, Integer> resultMap = converter.getNumChangesPerAuthor(authorsMap, Arrays.asList(author1));
 
-		assertEquals(resultMap.get("Some Author 1"), 3);
+		assertEquals(3, resultMap.get("Some Author 1"));
 	}
 }

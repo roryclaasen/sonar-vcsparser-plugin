@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.sonar.api.ce.ComputeEngineSide;
 import org.sonar.api.utils.log.Logger;
@@ -39,13 +38,13 @@ public class JsonAuthorParser {
 				authorDataList.add(jsonObjectToAuthorData((JSONObject) object));
 			}
 			return authorDataList;
-		} catch (JSONException | ParseException e) {
+		} catch (ParseException e) {
 			log.error("Unable to process authors", e);
 			return null;
 		}
 	}
 
-	public AuthorData jsonObjectToAuthorData(JSONObject object) throws JSONException, ParseException {
+	public AuthorData jsonObjectToAuthorData(JSONObject object) throws ParseException {
 		Date date = dateParser.parse(object.getString("date"));
 		List<Author> authors = new ArrayList<Author>();
 		for (Object authorObj : (JSONArray) object.get("authors")) {

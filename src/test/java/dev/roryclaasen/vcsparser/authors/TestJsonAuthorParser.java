@@ -78,7 +78,7 @@ public class TestJsonAuthorParser {
 
 	@Test
 	void givenJsonAuthorParser_whenJsonArrayToAuthorDataListThrow_thenReturnNull() {
-		JSONObject someBadJsonObject = new JSONObject();
+		JSONObject someBadJsonObject = createJsonAuthorData("2019-06-19 00:00:00", createJsonAuthor("Some Author Name", 1));
 
 		JSONArray jsonAuthorDataArray = new JSONArray();
 		jsonAuthorDataArray.put(someBadJsonObject);

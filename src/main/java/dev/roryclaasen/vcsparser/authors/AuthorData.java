@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.List;
 
 public class AuthorData {
-	public Date date;
-	public List<Author> authors;
+	public final Date date;
+	public final List<Author> authors;
 
 	public AuthorData(Date date, List<Author> authors) {
 		this.date = date;

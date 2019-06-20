@@ -68,6 +68,7 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 				break;
 			case FILE:
 				computeFileMeasure(context, authorsData, numAuthors[i], numAuthors10Perc[i], numChanges[i]);
+				break;
 			default:
 				break;
 			}
@@ -106,7 +107,7 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 			return;
 
 		List<AuthorData> authorDataList = jsonParser.jsonStringArrayToAuthorDataList(authorsDataMeasure.getStringValue());
-		if (authorDataList.size() == 0)
+		if (authorDataList.isEmpty())
 			return;
 
 		if (!authorsCache.containsKey(projectKey))
@@ -126,7 +127,7 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 	}
 
 	protected void computeNumAuthors(MeasureComputerContext context, String numAuthorsKey, Collection<Integer> authorNumChanges) {
-		if (authorNumChanges.size() > 0)
+		if (!authorNumChanges.isEmpty())
 			context.addMeasure(numAuthorsKey, authorNumChanges.size());
 	}
 
@@ -135,13 +136,13 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 		if (numChangesMeasure == null)
 			return;
 
-		int numChanges = numChangesMeasure.getIntValue();
-		if (numChanges == 0)
+		int numChangesValue = numChangesMeasure.getIntValue();
+		if (numChangesValue == 0)
 			return;
 
 		int authorsOver = 0;
 		for (Integer item : authorNumChanges) {
-			double perc = (item * 100D) / numChanges;
+			double perc = (item * 100D) / numChangesValue;
 			if (perc > threshold)
 				authorsOver++;
 		}

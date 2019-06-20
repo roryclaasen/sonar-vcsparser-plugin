@@ -4,8 +4,8 @@
 package dev.roryclaasen.vcsparser.authors;
 
 public class Author {
-	public String name;
-	public int numberOfChanges;
+	public final String name;
+	public final int numberOfChanges;
 
 	public Author(String name, int numberOfChanges) {
 		this.name = name;

@@ -11,11 +11,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+
+import dev.roryclaasen.vcsparser.LoggerCreator;
 
 public class FileReader implements IFileReader {
+	private final Logger log;
 
-	private final Logger log = Loggers.get(FileReader.class);
+	public FileReader(LoggerCreator loggerCreator) {
+		log = loggerCreator.get(FileReader.class);
+	}
 
 	@Override
 	public String readFile(String fileName) {

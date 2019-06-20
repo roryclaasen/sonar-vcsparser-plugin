@@ -5,24 +5,28 @@ package dev.roryclaasen.vcsparser;
 
 import org.sonar.api.Plugin;
 import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 
-import dev.roryclaasen.vcsparser.measures.LinesFixedOverChangedComputer;
-import dev.roryclaasen.vcsparser.measures.PluginMetrics;
+import dev.roryclaasen.vcsparser.authors.AuthorListConverter;
+import dev.roryclaasen.vcsparser.authors.JsonAuthorParser;
+import dev.roryclaasen.vcsparser.measures.ComputeLinesFixedOverChangedMetric;
+import dev.roryclaasen.vcsparser.measures.ComputeNumAuthorsMetric;
+import dev.roryclaasen.vcsparser.metrics.PluginMetrics;
 import dev.roryclaasen.vcsparser.system.Environment;
 import dev.roryclaasen.vcsparser.system.FileReader;
 import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
 public class VcsparserExtensionsPlugin implements Plugin {
-	private final Logger log = Loggers.get(VcsparserExtensionsPlugin.class);
+	private final Logger log;
 
 	private IEnvironment environment;
 	private IFileReader fileReader;
 
 	public VcsparserExtensionsPlugin() {
+		LoggerCreator loggerCreator = new LoggerCreator();
+		this.log = loggerCreator.get(VcsparserExtensionsPlugin.class);
 		this.environment = new Environment();
-		this.fileReader = new FileReader();
+		this.fileReader = new FileReader(loggerCreator);
 	}
 
 	public void setEnvironment(IEnvironment environment) {
@@ -38,7 +42,15 @@ public class VcsparserExtensionsPlugin implements Plugin {
 		log.debug("Registering Vcsparser Extensions");
 
 		PluginMetrics.loadAndAlter(environment, fileReader);
+
+		context.addExtension(LoggerCreator.class);
 		context.addExtension(PluginMetrics.class);
-		context.addExtension(LinesFixedOverChangedComputer.class);
+		context.addExtension(JsonAuthorParser.class);
+		context.addExtension(AuthorListConverter.class);
+
+		context.addExtension(ComputeLinesFixedOverChangedMetric.class);
+		context.addExtension(ComputeNumAuthorsMetric.class);
+
+		context.addExtension(PostProjectAnalysisHook.class);
 	}
 }

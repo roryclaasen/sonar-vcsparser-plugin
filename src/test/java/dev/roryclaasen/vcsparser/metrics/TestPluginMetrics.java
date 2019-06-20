@@ -1,7 +1,7 @@
 // Copyright (c) Rory Claasen. All rights reserved.
 // Licensed under the MIT License.
 
-package dev.roryclaasen.vcsparser.measures;
+package dev.roryclaasen.vcsparser.metrics;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -9,7 +9,6 @@ import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +20,6 @@ import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
 public class TestPluginMetrics {
-
 	@Mock
 	private IEnvironment environment;
 
@@ -57,20 +55,11 @@ public class TestPluginMetrics {
 	}
 
 	@Test
-	void givenPluginMetrics_whenClassInitialize_thenCreateListOfDates() {
-		PluginMetrics.Metrics.remove(someMetricKey);
-
-		List<Pair<String, String>> dates = PluginMetrics.DatePairs;
-
-		assertEquals(6, dates.size());
-	}
-
-	@Test
 	void givenPluginMetrics_whenClassInitialize_thenCreateAndPutMetrics() {
 		PluginMetrics.Metrics.remove(someMetricKey);
-
-		int dateSize = PluginMetrics.DatePairs.size();
-		int measureslength = PluginMetrics.MetricDetails.values().length;
+		
+		int dateSize = MetricDate.values().length;
+		int measureslength = PluginMetric.values().length;
 
 		assertEquals(dateSize * measureslength, PluginMetrics.Metrics.size());
 	}
@@ -81,8 +70,8 @@ public class TestPluginMetrics {
 
 		@SuppressWarnings("rawtypes") List<Metric> metrics = pluginMetrics.getMetrics();
 
-		assertEquals(6, metrics.size());
-		// assertEquals(PluginMetrics.Metrics.values(), metrics);
+		assertEquals(18, metrics.size());
+		assertIterableEquals(PluginMetrics.Metrics.values(), metrics);
 	}
 
 	@Test
@@ -151,14 +140,5 @@ public class TestPluginMetrics {
 		PluginMetrics.loadAndAlter(environment, fileReader);
 
 		assertEquals(PluginMetrics.Metrics.get(someMetricKey).getDomain(), domain);
-	}
-
-	@Test
-	void givenPluginMetrics_whenGetAllDatesForMetric_thenReturnListOfKeys() {
-		String someKey = "someKey";
-
-		String[] keys = PluginMetrics.getAllDatesForMetric(someKey);
-
-		assertEquals(PluginMetrics.DatePairs.size(), keys.length);
 	}
 }

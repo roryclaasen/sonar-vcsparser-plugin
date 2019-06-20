@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static dev.roryclaasen.vcsparser.measures.PluginMetrics.getAllDatesForMetric;
+import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.getAllDatesForMetric;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -18,8 +18,7 @@ import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinition;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinition.Builder;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinitionContext;
 
-public class TestLinesFixedOverChangedComputer {
-
+public class TestComputeLinesFixedOverChangedMetric {
 	@Mock
 	private Builder defBuilder;
 
@@ -35,7 +34,7 @@ public class TestLinesFixedOverChangedComputer {
 	@Mock
 	private Measure measure;
 
-	private LinesFixedOverChangedComputer computer;
+	private ComputeLinesFixedOverChangedMetric computer;
 
 	private final String linesChangedKey = "SomeLinesChangedKey";
 	private final String linesChangedFixedKey = "SomeLinesFixedKey";
@@ -55,11 +54,11 @@ public class TestLinesFixedOverChangedComputer {
 
 		when(measure.getIntValue()).thenReturn(0);
 
-		computer = new LinesFixedOverChangedComputer();
+		computer = new ComputeLinesFixedOverChangedMetric();
 	}
 
 	@Test
-	void givenLinesFixedOverChangedComputer_whenDefine_thenReturnMeasureComputerDefinition() {
+	void givenComputeLinesFixedOverChangedMetric_whenDefine_thenReturnMeasureComputerDefinition() {
 		MeasureComputerDefinition defineComputer = computer.define(defContext);
 
 		verify(defBuilder, times(1)).build();
@@ -67,7 +66,7 @@ public class TestLinesFixedOverChangedComputer {
 	}
 
 	@Test
-	void givenLinesFixedOverChangedComputer_whenComputeLinesChangedNull_thenDoNotAddMeasure() {
+	void givenComputeLinesFixedOverChangedMetric_whenComputeLinesChangedNull_thenDoNotAddMeasure() {
 		when(context.getMeasure(linesChangedKey)).thenReturn(null);
 
 		computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
@@ -77,14 +76,14 @@ public class TestLinesFixedOverChangedComputer {
 	}
 
 	@Test
-	void givenLinesFixedOverChangedComputer_whenComputeLinesChangedZero_thenDoNotAddMeasure() {
+	void givenComputeLinesFixedOverChangedMetric_whenComputeLinesChangedZero_thenDoNotAddMeasure() {
 		computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
 
 		verify(context, times(0)).addMeasure(eq(linesChangedFixedKey), anyInt());
 	}
 
 	@Test
-	void givenLinesFixedOverChangedComputer_whenLinesChangedFixedNull_thenLinesChangedFixedZero() {
+	void givenComputeLinesFixedOverChangedMetric_whenLinesChangedFixedNull_thenLinesChangedFixedZero() {
 		when(context.getMeasure(linesChangedFixedKey)).thenReturn(null);
 		when(measure.getIntValue()).thenReturn(2);
 
@@ -94,7 +93,7 @@ public class TestLinesFixedOverChangedComputer {
 	}
 
 	@Test
-	void givenLinesFixedOverChangedComputer_whenCompute_thenAddMeasure() {
+	void givenComputeLinesFixedOverChangedMetric_whenCompute_thenAddMeasure() {
 		when(measure.getIntValue()).thenReturn(2, 4);
 
 		computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
@@ -103,7 +102,7 @@ public class TestLinesFixedOverChangedComputer {
 	}
 
 	@Test
-	void givenLinesFixedOverChangedComputer_whenCompute_LoopThroughDates() {
+	void givenComputeLinesFixedOverChangedMetric_whenCompute_LoopThroughDates() {
 		String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
 
 		computer.compute(context);

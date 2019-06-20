@@ -16,15 +16,20 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sonar.api.ce.ComputeEngineSide;
 import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
+
+import dev.roryclaasen.vcsparser.LoggerCreator;
 
 @ComputeEngineSide
 public class AuthorUtils {
-	private final Logger log = Loggers.get(AuthorUtils.class);
+	private final Logger log;
 
 	protected static final String DATE_FORMAT = "yyyy/MM/dd";
 	private SimpleDateFormat dateParser = new SimpleDateFormat(DATE_FORMAT);
-	
+
+	public AuthorUtils(LoggerCreator loggerCreator) {
+		log = loggerCreator.get(AuthorUtils.class);
+	}
+
 	public List<AuthorData> jsonStringArrayToAuthorDataList(String jsonStringArray) {
 		return jsonArrayToAuthorDataList(new JSONArray(jsonStringArray));
 	}
@@ -36,12 +41,12 @@ public class AuthorUtils {
 				authorDataList.add(jsonObjectToAuthorData((JSONObject) object));
 			}
 			return authorDataList;
-		} catch (Exception e) {
+		} catch (JSONException | ParseException e) {
 			log.error("Unable to process authors", e);
 			return null;
 		}
 	}
-	
+
 	public AuthorData jsonObjectToAuthorData(JSONObject object) throws JSONException, ParseException {
 		Date date = dateParser.parse(object.getString("date"));
 		List<Author> authors = new ArrayList<Author>();
@@ -53,7 +58,7 @@ public class AuthorUtils {
 		}
 		return new AuthorData(date, authors);
 	}
-	
+
 	public List<Author> getAuthorListAfterDate(Collection<AuthorData> authorDataList, Date date) {
 		List<Author> datedAuthorDataList = new ArrayList<Author>();
 		for (AuthorData authorData : authorDataList) {

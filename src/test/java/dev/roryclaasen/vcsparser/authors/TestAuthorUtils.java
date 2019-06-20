@@ -4,6 +4,7 @@
 package dev.roryclaasen.vcsparser.authors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,15 +21,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.sonar.api.utils.log.Logger;
+
+import dev.roryclaasen.vcsparser.LoggerCreator;
 
 public class TestAuthorUtils {
+	@Mock
+	private LoggerCreator loggerCreator;
+
+	@Mock
+	private Logger logger;
+
 	private SimpleDateFormat dateParser;
 	private AuthorUtils authorUtils;
 
 	@BeforeEach
 	void SetUp() {
+		MockitoAnnotations.initMocks(this);
+
+		when(loggerCreator.get(AuthorUtils.class)).thenReturn(logger);
+
 		dateParser = new SimpleDateFormat(AuthorUtils.DATE_FORMAT);
-		authorUtils = new AuthorUtils();
+		authorUtils = new AuthorUtils(loggerCreator);
 	}
 
 	private JSONObject createJsonAuthorData(String date, JSONObject... authors) {
@@ -44,7 +60,7 @@ public class TestAuthorUtils {
 		author.put("number_of_changes", numChanges);
 		return author;
 	}
-	
+
 	@Test
 	void givenAuthorUtils_whenJsonStringArrayToAuthorDataList_thenReturnListAuthorData() {
 		JSONArray jsonAuthorDataArray = new JSONArray();

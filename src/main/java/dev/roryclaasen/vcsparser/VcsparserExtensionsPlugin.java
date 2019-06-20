@@ -5,7 +5,6 @@ package dev.roryclaasen.vcsparser;
 
 import org.sonar.api.Plugin;
 import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 
 import dev.roryclaasen.vcsparser.authors.AuthorUtils;
 import dev.roryclaasen.vcsparser.measures.ComputeLinesFixedOverChangedMetric;
@@ -17,14 +16,16 @@ import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
 public class VcsparserExtensionsPlugin implements Plugin {
-	private final Logger log = Loggers.get(VcsparserExtensionsPlugin.class);
+	private final Logger log;
 
 	private IEnvironment environment;
 	private IFileReader fileReader;
 
 	public VcsparserExtensionsPlugin() {
+		LoggerCreator loggerCreator = new LoggerCreator();
+		this.log = loggerCreator.get(VcsparserExtensionsPlugin.class);
 		this.environment = new Environment();
-		this.fileReader = new FileReader();
+		this.fileReader = new FileReader(loggerCreator);
 	}
 
 	public void setEnvironment(IEnvironment environment) {
@@ -40,6 +41,7 @@ public class VcsparserExtensionsPlugin implements Plugin {
 		log.debug("Registering Vcsparser Extensions");
 
 		PluginMetrics.loadAndAlter(environment, fileReader);
+		context.addExtension(LoggerCreator.class);
 		context.addExtension(PluginMetrics.class);
 		context.addExtension(AuthorUtils.class);
 		context.addExtension(PostProjectAnalysisHook.class);

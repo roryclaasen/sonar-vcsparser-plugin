@@ -4,8 +4,6 @@
 [![AppVeyor tests (master)][tests master badge]][tests master]
 [![Codecov (master)][coverage master badge]][coverage master]
 [![Quality Gate Status (master)][quality master badge]][quality master]
-[![Build status (project)][build project badge]][build project]
-[![AppVeyor tests (project)][tests project badge]][tests project]
 [![GitHub tag (latest)][tag latest badge]][tag latest]
 
 Vcsparser Extensions for SonarQube
@@ -93,15 +91,8 @@ This project is licensed under the MIT License - see the [license file](LICENSE)
 [build master artifacts]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin/branch/master/artifacts
 [build master badge]: https://img.shields.io/appveyor/ci/roryclaasen/sonar-vcsparser-plugin/master.svg?label=build%20master&logo=appveyor
 
-[build project]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin
-[build project artifacts]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin/build/artifacts
-[build project badge]: https://img.shields.io/appveyor/ci/roryclaasen/sonar-vcsparser-plugin.svg?label=build%20project&logo=appveyor
-
 [tests master]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin/branch/master/tests
 [tests master badge]: https://img.shields.io/appveyor/tests/roryclaasen/sonar-vcsparser-plugin/master.svg?label=tests%20master&logo=appveyor
-
-[tests project]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin/build/tests
-[tests project badge]: https://img.shields.io/appveyor/tests/roryclaasen/sonar-vcsparser-plugin.svg?label=tests%20project&logo=appveyor
 
 [coverage master]: https://codecov.io/gh/roryclaasen/sonar-vcsparser-plugin/branch/master
 [coverage master badge]: https://img.shields.io/codecov/c/github/roryclaasen/sonar-vcsparser-plugin/master.svg?label=coverage%20master&logo=codecov

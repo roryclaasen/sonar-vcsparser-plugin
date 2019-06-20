@@ -19,8 +19,8 @@ test_script:
 
 after_test:
   - ps: |
-        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE -And $env:APPVEYOR_REPO_BRANCH -eq "master") {
-          mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" sonar:sonar "-Dsonar.projectKey=$env:SONAR_PROJECT_KEY" "-Dsonar.host.url=$env:SONAR_HOST_URL" "-Dsonar.organization=$env:SONAR_ORGANIZATION"
+        if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
+          mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" sonar:sonar "-Dsonar.projectKey=$env:SONAR_PROJECT_KEY" "-Dsonar.host.url=$env:SONAR_HOST_URL" "-Dsonar.organization=$env:SONAR_ORGANIZATION" "-Dsonar.branch.name=$env:APPVEYOR_REPO_BRANCH"
         }
 
 on_finish:

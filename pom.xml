@@ -177,9 +177,6 @@
                 <version>${jacoco.version}</version>
                 <configuration>
                     <skip>${maven.test.skip}</skip>
-                    <excludes>
-                        <exclude>**/ObjectFactory.class</exclude>
-                    </excludes>
                 </configuration>
                 <executions>
                     <execution>

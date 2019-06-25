@@ -7,6 +7,7 @@ import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.getAllDatesFo
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,6 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 	private PluginMetric numAuthors = PluginMetric.NUM_AUTHORS;
 	private PluginMetric numAuthors10Perc = PluginMetric.NUM_AUTHORS_10_PERC;
 
-	// authorsCache[project][date][file][author] = over10perc
 	protected static Map<String, Map<MetricDate, NavigableMap<String, Map<String, Boolean>>>> authorsCache = new HashMap<String, Map<MetricDate, NavigableMap<String, Map<String, Boolean>>>>();
 
 	private double threshold = 10.0;
@@ -54,15 +54,12 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 	}
 
 	protected void saveProjectCache(String projectKey, MetricDate date, String currentKey, Map<String, Boolean> authorMap) {
-		// Project (projectKey)
 		if (!authorsCache.containsKey(projectKey))
-			authorsCache.put(projectKey, new HashMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>());
+			authorsCache.put(projectKey, new EnumMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>(MetricDate.class));
 
-		// Metric Date
 		if (!authorsCache.get(projectKey).containsKey(date))
 			authorsCache.get(projectKey).put(date, new TreeMap<String, Map<String, Boolean>>());
 
-		// File (currentKey)
 		if (!authorsCache.get(projectKey).get(date).containsKey(currentKey))
 			authorsCache.get(projectKey).get(date).put(currentKey, new HashMap<String, Boolean>());
 
@@ -95,7 +92,7 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 			case PROJECT:
 			case MODULE:
 			case DIRECTORY:
-				computeChildMeasure(context, date, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+				computeChildMeasure(context, date, numAuthorsKey, numAuthors10PercKey);
 				break;
 			case FILE:
 				computeFileMeasure(context, date, authorsData, numAuthorsKey, numAuthors10PercKey, numChangesKey);
@@ -106,7 +103,7 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 		}
 	}
 
-	protected void computeChildMeasure(MeasureComputerContext context, MetricDate date, String numAuthorsKey, String numAuthors10PercKey, String numChangesKey) {
+	protected void computeChildMeasure(MeasureComputerContext context, MetricDate date, String numAuthorsKey, String numAuthors10PercKey) {
 		String currentKey = context.getComponent().getKey();
 		String projectKey = currentKey.split(":", 2)[0];
 

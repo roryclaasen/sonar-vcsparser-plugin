@@ -10,6 +10,7 @@ import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +116,7 @@ public class TestComputeNumAuthorsMetric {
 	}
 
 	private void addAuthorToCache(String project, MetricDate date, String file, String name, boolean value) {
-		ComputeNumAuthorsMetric.authorsCache.putIfAbsent(project, new HashMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>());
+		ComputeNumAuthorsMetric.authorsCache.putIfAbsent(project, new EnumMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>(MetricDate.class));
 		ComputeNumAuthorsMetric.authorsCache.get(project).putIfAbsent(date, new TreeMap<String, Map<String, Boolean>>());
 		ComputeNumAuthorsMetric.authorsCache.get(project).get(date).putIfAbsent(file, new HashMap<String, Boolean>());
 		ComputeNumAuthorsMetric.authorsCache.get(project).get(date).get(file).putIfAbsent(name, value);
@@ -127,7 +128,7 @@ public class TestComputeNumAuthorsMetric {
 
 	@Test
 	void givenComputeNumAuthorsMetric_whenRemoveProjectCacheAndKeyMissing_thenDoNotRemove() {
-		ComputeNumAuthorsMetric.authorsCache.put("SomeOtherProjectKey", new HashMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>());
+		ComputeNumAuthorsMetric.authorsCache.put("SomeOtherProjectKey", new EnumMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>(MetricDate.class));
 
 		computer.removeProjectCache(projectKey);
 
@@ -136,7 +137,7 @@ public class TestComputeNumAuthorsMetric {
 
 	@Test
 	void givenComputeNumAuthorsMetric_whenRemoveProjectCacheAndKeyMatched_thenRemove() {
-		ComputeNumAuthorsMetric.authorsCache.put(projectKey, new HashMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>());
+		ComputeNumAuthorsMetric.authorsCache.put(projectKey, new EnumMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>(MetricDate.class));
 
 		computer.removeProjectCache(projectKey);
 
@@ -327,7 +328,7 @@ public class TestComputeNumAuthorsMetric {
 
 	@Test
 	void givenComputeNumAuthorsMetric_whenComputeChildMeasureAndMissingProjectInCache_thenReturn() {
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(0)).addMeasure(eq(numAuthorsKey), anyInt());
 		verify(context, times(0)).addMeasure(eq(numAuthors10PercKey), anyInt());
@@ -335,10 +336,10 @@ public class TestComputeNumAuthorsMetric {
 
 	@Test
 	void givenComputeNumAuthorsMetric_whenComputeChildMeasureAndMissingDateProjectInCache_thenReturn() {
-		ComputeNumAuthorsMetric.authorsCache.putIfAbsent(projectKey, new HashMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>());
-		
-		
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		ComputeNumAuthorsMetric.authorsCache.putIfAbsent(projectKey, new EnumMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>(MetricDate.class));
+
+
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(0)).addMeasure(eq(numAuthorsKey), anyInt());
 		verify(context, times(0)).addMeasure(eq(numAuthors10PercKey), anyInt());
@@ -348,7 +349,7 @@ public class TestComputeNumAuthorsMetric {
 	void givenComputeNumAuthorsMetric_whenComputeChildMeasureAndIncorrectSubMapFilter_thenDoNotAddMeasure() {
 		addAuthorToCache(projectKey, metricDate, "A Bad Component Key", "Author 1", true);
 
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(0)).addMeasure(eq(numAuthorsKey), anyInt());
 		verify(context, times(0)).addMeasure(eq(numAuthors10PercKey), anyInt());
@@ -358,7 +359,7 @@ public class TestComputeNumAuthorsMetric {
 	void givenComputeNumAuthorsMetric_whenComputeChildMeasure_thenAddMeasures() {
 		addAuthorToCache("Author 1", true);
 
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(1)).addMeasure(eq(numAuthorsKey), eq(1));
 		verify(context, times(1)).addMeasure(eq(numAuthors10PercKey), eq(1));
@@ -368,7 +369,7 @@ public class TestComputeNumAuthorsMetric {
 	void givenComputeNumAuthorsMetric_whenComputeChildMeasureAndAuthorFalse_thenAddNumAuthorsKeyMeasure() {
 		addAuthorToCache("Author 1", false);
 
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(1)).addMeasure(eq(numAuthorsKey), eq(1));
 		verify(context, times(0)).addMeasure(eq(numAuthors10PercKey), anyInt());
@@ -379,7 +380,7 @@ public class TestComputeNumAuthorsMetric {
 		addAuthorToCache("Author 1", false);
 		addAuthorToCache(projectKey, metricDate, componentKey + ".ext", "Author 1", false);
 
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(1)).addMeasure(eq(numAuthorsKey), eq(1));
 		verify(context, times(0)).addMeasure(eq(numAuthors10PercKey), anyInt());
@@ -390,7 +391,7 @@ public class TestComputeNumAuthorsMetric {
 		addAuthorToCache("Author 1", false);
 		addAuthorToCache(projectKey, metricDate, componentKey + ".ext", "Author 1", true);
 
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(1)).addMeasure(eq(numAuthorsKey), eq(1));
 		verify(context, times(1)).addMeasure(eq(numAuthors10PercKey), eq(1));
@@ -401,7 +402,7 @@ public class TestComputeNumAuthorsMetric {
 		addAuthorToCache("Author 1", true);
 		addAuthorToCache(projectKey, metricDate, componentKey + ".ext", "Author 1", false);
 
-		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey, numChangesKey);
+		computer.computeChildMeasure(context, metricDate, numAuthorsKey, numAuthors10PercKey);
 
 		verify(context, times(1)).addMeasure(eq(numAuthorsKey), eq(1));
 		verify(context, times(1)).addMeasure(eq(numAuthors10PercKey), eq(1));

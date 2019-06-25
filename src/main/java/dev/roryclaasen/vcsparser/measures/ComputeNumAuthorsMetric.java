@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.*;
+import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.getAllDatesForMetric;
 
 import java.util.Collection;
 import java.util.Date;
@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 
 import org.sonar.api.ce.ComputeEngineSide;
 import org.sonar.api.ce.measure.Measure;
@@ -22,17 +24,19 @@ import dev.roryclaasen.vcsparser.authors.Author;
 import dev.roryclaasen.vcsparser.authors.AuthorData;
 import dev.roryclaasen.vcsparser.authors.AuthorListConverter;
 import dev.roryclaasen.vcsparser.authors.JsonAuthorParser;
+import dev.roryclaasen.vcsparser.metrics.MetricDate;
 import dev.roryclaasen.vcsparser.metrics.PluginMetric;
 
 @ComputeEngineSide
 public class ComputeNumAuthorsMetric implements MeasureComputer {
 	private String authorsData = "vcsparser_authors_data";
-	private String[] numChanges = getAllDatesForMetric("vcsparser_numchanges");
+	private String numChanges = "vcsparser_numchanges";
 
-	private String[] numAuthors = PluginMetric.NUM_AUTHORS.getKeyAllDates();
-	private String[] numAuthors10Perc = PluginMetric.NUM_AUTHORS_10_PERC.getKeyAllDates();
+	private PluginMetric numAuthors = PluginMetric.NUM_AUTHORS;
+	private PluginMetric numAuthors10Perc = PluginMetric.NUM_AUTHORS_10_PERC;
 
-	protected static Map<String, Map<String, List<AuthorData>>> authorsCache = new HashMap<String, Map<String, List<AuthorData>>>();
+	// authorsCache[project][date][file][author] = over10perc
+	protected static Map<String, Map<MetricDate, NavigableMap<String, Map<String, Boolean>>>> authorsCache = new HashMap<String, Map<MetricDate, NavigableMap<String, Map<String, Boolean>>>>();
 
 	private double threshold = 10.0;
 
@@ -49,25 +53,52 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 			authorsCache.remove(projectKey);
 	}
 
+	protected void saveProjectCache(String projectKey, MetricDate date, String currentKey, Map<String, Boolean> authorMap) {
+		// Project (projectKey)
+		if (!authorsCache.containsKey(projectKey))
+			authorsCache.put(projectKey, new HashMap<MetricDate, NavigableMap<String, Map<String, Boolean>>>());
+
+		// Metric Date
+		if (!authorsCache.get(projectKey).containsKey(date))
+			authorsCache.get(projectKey).put(date, new TreeMap<String, Map<String, Boolean>>());
+
+		// File (currentKey)
+		if (!authorsCache.get(projectKey).get(date).containsKey(currentKey))
+			authorsCache.get(projectKey).get(date).put(currentKey, new HashMap<String, Boolean>());
+
+		Map<String, Boolean> dateCache = authorsCache.get(projectKey).get(date).get(currentKey);
+
+		for (Entry<String, Boolean> entry : authorMap.entrySet()) {
+			if (!dateCache.containsKey(entry.getKey()))
+				dateCache.put(entry.getKey(), entry.getValue());
+			else if (entry.getValue())
+				dateCache.replace(entry.getKey(), true);
+		}
+	}
+
 	@Override
 	public MeasureComputerDefinition define(MeasureComputerDefinitionContext defContext) {
 		return defContext.newDefinitionBuilder()
-				.setInputMetrics(ObjectArrays.concat(new String[] { authorsData }, numChanges, String.class))
-				.setOutputMetrics(ObjectArrays.concat(numAuthors, numAuthors10Perc, String.class))
+				.setInputMetrics(ObjectArrays.concat(new String[] { authorsData }, getAllDatesForMetric(numChanges), String.class))
+				.setOutputMetrics(ObjectArrays.concat(numAuthors.getKeyAllDates(), numAuthors10Perc.getKeyAllDates(), String.class))
 				.build();
 	}
 
 	@Override
 	public void compute(MeasureComputerContext context) {
-		for (int i = 0; i < numAuthors10Perc.length; i++) {
+		for (MetricDate date : MetricDate.values()) {
+			String numAuthorsKey = numAuthors.getKey() + date.getSuffix();
+			String numAuthors10PercKey = numAuthors10Perc.getKey() + date.getSuffix();
+			String numChangesKey = numChanges + date.getSuffix();
+
 			switch (context.getComponent().getType()) {
 			case PROJECT:
 			case MODULE:
 			case DIRECTORY:
-				computeChildMeasure(context, numAuthors[i], numAuthors10Perc[i], numChanges[i]);
+				computeChildMeasure(context, date, numAuthorsKey, numAuthors10PercKey, numChangesKey);
 				break;
 			case FILE:
-				computeFileMeasure(context, authorsData, numAuthors[i], numAuthors10Perc[i], numChanges[i]);
+				computeFileMeasure(context, date, authorsData, numAuthorsKey, numAuthors10PercKey, numChangesKey);
 				break;
 			default:
 				break;
@@ -75,33 +106,39 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 		}
 	}
 
-	protected void computeChildMeasure(MeasureComputerContext context, String numAuthorsKey, String numAuthors10PercKey, String numChangesKey) {
+	protected void computeChildMeasure(MeasureComputerContext context, MetricDate date, String numAuthorsKey, String numAuthors10PercKey, String numChangesKey) {
 		String currentKey = context.getComponent().getKey();
 		String projectKey = currentKey.split(":", 2)[0];
 
 		if (!authorsCache.containsKey(projectKey))
 			return;
 
-		Map<String, List<AuthorData>> projectCache = authorsCache.get(projectKey);
+		if (!authorsCache.get(projectKey).containsKey(date))
+			return;
 
-		Date date = getMetricDateFromKey(numAuthorsKey).getDate();
-		Map<String, Integer> numChangesDict = new HashMap<String, Integer>();
-		for (Entry<String, List<AuthorData>> entry : projectCache.entrySet()) {
-			if (!entry.getKey().startsWith(currentKey))
-				continue;
+		NavigableMap<String, Map<String, Boolean>> projectCache = authorsCache.get(projectKey).get(date);
+		Map<String, Map<String, Boolean>> validMaps = projectCache.subMap(currentKey, currentKey + Character.MAX_VALUE);
 
-			numChangesDict = getAuthorNumChangesAfterDateDict(entry.getValue(), date, numChangesDict);
+		Map<String, Boolean> authorMap = new HashMap<String, Boolean>();
+		for (Entry<String, Map<String, Boolean>> fileEntry : validMaps.entrySet()) {
+			for (Entry<String, Boolean> aurthorEntry : fileEntry.getValue().entrySet()) {
+				if (!authorMap.containsKey(aurthorEntry.getKey()))
+					authorMap.put(aurthorEntry.getKey(), aurthorEntry.getValue());
+				else if (aurthorEntry.getValue())
+					authorMap.replace(aurthorEntry.getKey(), true);
+			}
 		}
 
-		computeNumAuthors(context, numAuthorsKey, numChangesDict.values());
-		computeNumAuthorsOver10Perc(context, numChangesKey, numAuthors10PercKey, numChangesDict.values());
+		computeNumAuthors(context, numAuthorsKey, authorMap.values());
+		computeNumAuthorsOver10Perc(context, numAuthors10PercKey, authorMap.values());
 	}
 
-	protected void computeFileMeasure(MeasureComputerContext context, String authorsDataKey, String numAuthorsKey, String numAuthors10PercKey, String numChangesKey) {
+	protected void computeFileMeasure(MeasureComputerContext context, MetricDate date, String authorsDataKey, String numAuthorsKey, String numAuthors10PercKey, String numChangesKey) {
 		String currentKey = context.getComponent().getKey();
 		String projectKey = currentKey.split(":", 2)[0];
 
 		Measure authorsDataMeasure = context.getMeasure(authorsDataKey);
+		Measure numChangesMeasure = context.getMeasure(numChangesKey);
 
 		if (authorsDataMeasure == null)
 			return;
@@ -110,43 +147,45 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 		if (authorDataList.isEmpty())
 			return;
 
-		if (!authorsCache.containsKey(projectKey))
-			authorsCache.put(projectKey, new HashMap<String, List<AuthorData>>());
+		int numChangesValue = (numChangesMeasure == null) ? 0 : numChangesMeasure.getIntValue();
+		Map<String, Boolean> authorIsOver = getAuthorIsOverAfterDateDict(authorDataList, date.getDate(), numChangesValue);
 
-		authorsCache.get(projectKey).put(currentKey, authorDataList);
+		computeNumAuthors(context, numAuthorsKey, authorIsOver.values());
+		computeNumAuthorsOver10Perc(context, numAuthors10PercKey, authorIsOver.values());
 
-		Collection<Integer> authorNumChanges = getAuthorNumChangesAfterDateDict(authorDataList, getMetricDateFromKey(numAuthorsKey).getDate(), new HashMap<String, Integer>()).values();
-
-		computeNumAuthors(context, numAuthorsKey, authorNumChanges);
-		computeNumAuthorsOver10Perc(context, numChangesKey, numAuthors10PercKey, authorNumChanges);
+		saveProjectCache(projectKey, date, currentKey, authorIsOver);
 	}
 
-	protected Map<String, Integer> getAuthorNumChangesAfterDateDict(Collection<AuthorData> authorDataList, Date dateFrom, Map<String, Integer> currentMap) {
+	protected Map<String, Boolean> getAuthorIsOverAfterDateDict(Collection<AuthorData> authorDataList, Date dateFrom, int numChangesValue) {
 		List<Author> authorList = converter.getAuthorListAfterDate(authorDataList, dateFrom);
-		return converter.getNumChangesPerAuthor(currentMap, authorList);
-	}
+		Map<String, Integer> authors = converter.getNumChangesPerAuthor(new HashMap<String, Integer>(), authorList);
 
-	protected void computeNumAuthors(MeasureComputerContext context, String numAuthorsKey, Collection<Integer> authorNumChanges) {
-		if (!authorNumChanges.isEmpty())
-			context.addMeasure(numAuthorsKey, authorNumChanges.size());
-	}
-
-	protected void computeNumAuthorsOver10Perc(MeasureComputerContext context, String numChangesKey, String numAuthors10PercKey, Collection<Integer> authorNumChanges) {
-		Measure numChangesMeasure = context.getMeasure(numChangesKey);
-		if (numChangesMeasure == null)
-			return;
-
-		int numChangesValue = numChangesMeasure.getIntValue();
-		if (numChangesValue == 0)
-			return;
-
-		int authorsOver = 0;
-		for (Integer item : authorNumChanges) {
-			double perc = (item * 100D) / numChangesValue;
-			if (perc > threshold)
-				authorsOver++;
+		Map<String, Boolean> authorsOverMap = new HashMap<String, Boolean>();
+		for (Entry<String, Integer> entry : authors.entrySet()) {
+			if (numChangesValue == 0)
+				authorsOverMap.put(entry.getKey(), false);
+			else {
+				double perc = (entry.getValue() * 100D) / numChangesValue;
+				authorsOverMap.put(entry.getKey(), perc > threshold);
+			}
 		}
-		if (authorsOver > 0)
-			context.addMeasure(numAuthors10PercKey, authorsOver);
+		return authorsOverMap;
+	}
+
+	protected void computeNumAuthors(MeasureComputerContext context, String numAuthorsKey, Collection<Boolean> authorIsOver) {
+		if (!authorIsOver.isEmpty())
+			context.addMeasure(numAuthorsKey, authorIsOver.size());
+	}
+
+	protected void computeNumAuthorsOver10Perc(MeasureComputerContext context, String numAuthors10PercKey, Collection<Boolean> authorIsOver) {
+		if (authorIsOver.isEmpty())
+			return;
+		int count = 0;
+		for (boolean isOver : authorIsOver) {
+			if (isOver)
+				count++;
+		}
+		if (count != 0)
+			context.addMeasure(numAuthors10PercKey, count);
 	}
 }

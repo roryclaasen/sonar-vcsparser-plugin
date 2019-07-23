@@ -5,8 +5,8 @@ package dev.roryclaasen.vcsparser.measures;
 
 import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.getAllDatesForMetric;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -153,7 +153,7 @@ public class ComputeNumAuthorsMetric implements MeasureComputer {
 		saveProjectCache(projectKey, date, currentKey, authorIsOver);
 	}
 
-	protected Map<String, Boolean> getAuthorIsOverAfterDateDict(Collection<AuthorData> authorDataList, Date dateFrom, int numChangesValue) {
+	protected Map<String, Boolean> getAuthorIsOverAfterDateDict(Collection<AuthorData> authorDataList, LocalDateTime dateFrom, int numChangesValue) {
 		List<Author> authorList = converter.getAuthorListAfterDate(authorDataList, dateFrom);
 		Map<String, Integer> authors = converter.getNumChangesPerAuthor(new HashMap<String, Integer>(), authorList);
 

@@ -5,14 +5,13 @@ package dev.roryclaasen.vcsparser.authors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,10 +30,10 @@ public class TestAuthorListConverter {
 		Author author2 = new Author("Some Author 2", 5);
 
 		List<AuthorData> authorDataList = new ArrayList<AuthorData>();
-		authorDataList.add(new AuthorData(DateUtils.addDays(new Date(), -3), Arrays.asList(author1)));
-		authorDataList.add(new AuthorData(DateUtils.addDays(new Date(), -1), Arrays.asList(author2)));
+		authorDataList.add(new AuthorData(LocalDate.now().atStartOfDay().minusDays(3), Arrays.asList(author1)));
+		authorDataList.add(new AuthorData(LocalDate.now().atStartOfDay().minusDays(1), Arrays.asList(author2)));
 
-		List<Author> authors = converter.getAuthorListAfterDate(authorDataList, DateUtils.addDays(new Date(), -2));
+		List<Author> authors = converter.getAuthorListAfterDate(authorDataList, LocalDate.now().atStartOfDay().minusDays(2));
 
 		assertEquals(1, authors.size());
 		assertEquals(author2, authors.get(0));
@@ -42,7 +41,7 @@ public class TestAuthorListConverter {
 
 	@Test
 	void givenAuthorListConverter_whenGetAuthorListAfterDateAndEmptyAuthorDataColelction_thenReturnEmptyList() {
-		List<Author> authors = converter.getAuthorListAfterDate(new ArrayList<AuthorData>(), new Date());
+		List<Author> authors = converter.getAuthorListAfterDate(new ArrayList<AuthorData>(), LocalDate.now().atStartOfDay());
 
 		assertEquals(0, authors.size());
 	}

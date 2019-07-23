@@ -6,8 +6,8 @@ package dev.roryclaasen.vcsparser.authors;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -28,7 +28,7 @@ public class TestJsonAuthorParser {
 	@Mock
 	private Logger logger;
 
-	private SimpleDateFormat dateParser;
+	private DateTimeFormatter formatter;
 
 	private JsonAuthorParser jsonParser;
 
@@ -38,7 +38,7 @@ public class TestJsonAuthorParser {
 
 		when(loggerCreator.get(AuthorListConverter.class)).thenReturn(logger);
 
-		dateParser = new SimpleDateFormat(JsonAuthorParser.DATE_FORMAT);
+		formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 		jsonParser = new JsonAuthorParser(loggerCreator);
 	}
 
@@ -89,12 +89,12 @@ public class TestJsonAuthorParser {
 	}
 
 	@Test
-	void givenJsonAuthorParser_whenJsonObjectToAuthorData_thenReturnAuthorData() throws JSONException, ParseException {
+	void givenJsonAuthorParser_whenJsonObjectToAuthorData_thenReturnAuthorData() throws JSONException, DateTimeParseException {
 		JSONObject jsonAuthorData = createJsonAuthorData("2019/06/19 00:00:00", createJsonAuthor("Some Author Name", 1));
 
 		AuthorData authorData = jsonParser.jsonObjectToAuthorData(jsonAuthorData);
 
-		assertEquals("2019/06/19 00:00:00", dateParser.format(authorData.date));
+		assertEquals("2019/06/19 00:00:00", authorData.date.format(formatter));
 		assertEquals(1, authorData.authors.size());
 		Author author = authorData.authors.get(0);
 		assertEquals("Some Author Name", author.name);
@@ -105,7 +105,7 @@ public class TestJsonAuthorParser {
 	void givenJsonAuthorParser_whenJsonObjectToAuthorDataAndDateWrongFormat_thenThrowParseException() {
 		JSONObject jsonAuthorData = createJsonAuthorData("2019-06-19 00:00:00", createJsonAuthor("Some Author Name", 1));
 
-		assertThrows(ParseException.class, () -> jsonParser.jsonObjectToAuthorData(jsonAuthorData));
+		assertThrows(DateTimeParseException.class, () -> jsonParser.jsonObjectToAuthorData(jsonAuthorData));
 	}
 
 	@Test

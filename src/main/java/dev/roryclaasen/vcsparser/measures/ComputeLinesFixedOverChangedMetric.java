@@ -3,7 +3,7 @@
 
 package dev.roryclaasen.vcsparser.measures;
 
-import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.*;
+import static dev.roryclaasen.vcsparser.metrics.MetricKeyConverter.getAllDatesForMetric;
 
 import org.sonar.api.ce.ComputeEngineSide;
 import org.sonar.api.ce.measure.Measure;

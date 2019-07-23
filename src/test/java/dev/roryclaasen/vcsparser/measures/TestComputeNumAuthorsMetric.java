@@ -7,9 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -106,9 +107,9 @@ public class TestComputeNumAuthorsMetric {
 		authorOverMap.put("Author 1", true);
 		authorOverMap.put("Author 2", false);
 
-		when(jsonParser.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(Arrays.asList(new AuthorData(new Date(), new ArrayList<Author>())));
+		when(jsonParser.jsonStringArrayToAuthorDataList(jsonArray)).thenReturn(Arrays.asList(new AuthorData(LocalDate.now().atStartOfDay(), new ArrayList<Author>())));
 
-		when(converter.getAuthorListAfterDate(anyList(), any(Date.class))).thenReturn(new ArrayList<Author>());
+		when(converter.getAuthorListAfterDate(anyList(), any(LocalDateTime.class))).thenReturn(new ArrayList<Author>());
 		when(converter.getNumChangesPerAuthor(anyMap(), anyList())).thenReturn(authorChangesMap);
 
 		computer = new ComputeNumAuthorsMetric(jsonParser, converter);
@@ -214,9 +215,9 @@ public class TestComputeNumAuthorsMetric {
 	void givenComputeNumAuthorsMetric_whenGetAuthorIsOverAfterDateDict_thenReturnMap() {
 		List<AuthorData> authorDataList = new ArrayList<AuthorData>();
 		List<Author> authorList = new ArrayList<Author>();
-		Date dateFrom = new Date();
+		LocalDateTime dateFrom = LocalDate.now().atStartOfDay();
 
-		when(converter.getAuthorListAfterDate(anyList(), any(Date.class))).thenReturn(authorList);
+		when(converter.getAuthorListAfterDate(anyList(), any(LocalDateTime.class))).thenReturn(authorList);
 		when(converter.getNumChangesPerAuthor(anyMap(), anyList())).thenReturn(authorChangesMap);
 
 		Map<String, Boolean> returnedMap = computer.getAuthorIsOverAfterDateDict(authorDataList, dateFrom, numChanges);
@@ -230,9 +231,9 @@ public class TestComputeNumAuthorsMetric {
 	void givenComputeNumAuthorsMetric_whenGetAuthorIsOverAfterDateDictAndNumChangesZero_thenReturnMapEntriesFalse() {
 		List<AuthorData> authorDataList = new ArrayList<AuthorData>();
 		List<Author> authorList = new ArrayList<Author>();
-		Date dateFrom = new Date();
+		LocalDateTime dateFrom = LocalDate.now().atStartOfDay();
 
-		when(converter.getAuthorListAfterDate(anyList(), any(Date.class))).thenReturn(authorList);
+		when(converter.getAuthorListAfterDate(anyList(), any(LocalDateTime.class))).thenReturn(authorList);
 		when(converter.getNumChangesPerAuthor(anyMap(), anyList())).thenReturn(authorChangesMap);
 
 		Map<String, Boolean> returnedMap = computer.getAuthorIsOverAfterDateDict(authorDataList, dateFrom, 0);

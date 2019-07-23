@@ -3,10 +3,8 @@
 
 package dev.roryclaasen.vcsparser.metrics;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.apache.commons.lang3.time.DateUtils;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public enum MetricDate {
 	YEAR_1("_1y", " (1 year)", minusDate(1, 0, 1)),
@@ -18,9 +16,9 @@ public enum MetricDate {
 
 	private String suffix;
 	private String description;
-	private Date date;
+	private LocalDateTime date;
 
-	private MetricDate(String suffix, String description, Date date) {
+	private MetricDate(String suffix, String description, LocalDateTime date) {
 		this.suffix = suffix;
 		this.description = description;
 		this.date = date;
@@ -34,15 +32,15 @@ public enum MetricDate {
 		return description;
 	}
 
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	private static Date minusDate(int year, int month, int day) {
-		Date today = DateUtils.truncate(new Date(), Calendar.DAY_OF_MONTH);
-		today = DateUtils.addDays(today, -day);
-		today = DateUtils.addMonths(today, -month);
-		today = DateUtils.addYears(today, -year);
-		return today;
+	private static LocalDateTime minusDate(int year, int month, int day) {
+		LocalDateTime date = LocalDate.now().atStartOfDay();
+		date = date.minusDays(day);
+		date = date.minusMonths(month);
+		date = date.minusYears(year);
+		return date;
 	}
 }

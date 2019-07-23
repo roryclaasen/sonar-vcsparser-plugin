@@ -3,14 +3,14 @@
 
 package dev.roryclaasen.vcsparser.authors;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class AuthorData {
-	public final Date date;
+	public final LocalDateTime date;
 	public final List<Author> authors;
 
-	public AuthorData(Date date, List<Author> authors) {
+	public AuthorData(LocalDateTime date, List<Author> authors) {
 		this.date = date;
 		this.authors = authors;
 	}

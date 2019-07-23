@@ -3,10 +3,10 @@
 
 package dev.roryclaasen.vcsparser.authors;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -21,7 +21,7 @@ public class JsonAuthorParser {
 	private final Logger log;
 
 	protected static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
-	private SimpleDateFormat dateParser = new SimpleDateFormat(DATE_FORMAT);
+	private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
 	public JsonAuthorParser(LoggerCreator loggerCreator) {
 		log = loggerCreator.get(AuthorListConverter.class);
@@ -38,14 +38,14 @@ public class JsonAuthorParser {
 				authorDataList.add(jsonObjectToAuthorData((JSONObject) object));
 			}
 			return authorDataList;
-		} catch (ParseException e) {
+		} catch (DateTimeParseException e) {
 			log.error("Unable to process authors", e);
 			return null;
 		}
 	}
 
-	public AuthorData jsonObjectToAuthorData(JSONObject object) throws ParseException {
-		Date date = dateParser.parse(object.getString("date"));
+	public AuthorData jsonObjectToAuthorData(JSONObject object) throws DateTimeParseException {
+		LocalDateTime date = LocalDateTime.parse(object.getString("date"), dateFormatter);
 		List<Author> authors = new ArrayList<Author>();
 		for (Object authorObj : (JSONArray) object.get("authors")) {
 			JSONObject authorJson = (JSONObject) authorObj;

@@ -5,8 +5,8 @@ package dev.roryclaasen.vcsparser.metrics;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,31 +23,10 @@ public class TestMetricDate {
 	@ParameterizedTest
 	@EnumSource(MetricDate.class)
 	void givenMetricDate_whenDate_thenDateMustBeInPast(MetricDate metricDate) {
-		Date dateNow = new Date();
+		LocalDateTime dateNow = LocalDate.now().atStartOfDay();
 
-		Date date = metricDate.getDate();
+		LocalDateTime date = metricDate.getDate();
 
-		assertTrue(date.before(dateNow));
-	}
-
-	@ParameterizedTest
-	@EnumSource(MetricDate.class)
-	void givenMetricDate_whenDate_thenDateHasNoTime(MetricDate metricDate) {
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(metricDate.getDate());
-
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH);
-		int day = calendar.get(Calendar.DAY_OF_MONTH);
-		int hours = calendar.get(Calendar.HOUR_OF_DAY);
-		int minutes = calendar.get(Calendar.MINUTE);
-		int seconds = calendar.get(Calendar.SECOND);
-
-		assertNotEquals(0, year);
-		assertNotEquals(0, month);
-		assertNotEquals(0, day);
-		assertEquals(0, hours);
-		assertEquals(0, minutes);
-		assertEquals(0, seconds);
+		assertTrue(date.isBefore(dateNow));
 	}
 }

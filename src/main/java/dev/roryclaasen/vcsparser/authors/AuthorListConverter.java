@@ -3,9 +3,9 @@
 
 package dev.roryclaasen.vcsparser.authors;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -13,10 +13,10 @@ import org.sonar.api.ce.ComputeEngineSide;
 
 @ComputeEngineSide
 public class AuthorListConverter {
-	public List<Author> getAuthorListAfterDate(Collection<AuthorData> authorDataList, Date date) {
+	public List<Author> getAuthorListAfterDate(Collection<AuthorData> authorDataList, LocalDateTime date) {
 		List<Author> datedAuthorDataList = new ArrayList<Author>();
 		for (AuthorData authorData : authorDataList) {
-			if (authorData.date.after(date))
+			if (authorData.date.isAfter(date))
 				datedAuthorDataList.addAll(authorData.authors);
 		}
 		return datedAuthorDataList;

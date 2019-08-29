@@ -40,7 +40,7 @@
         <sonar.pluginClass>dev.roryclaasen.vcsparser.VcsparserExtensionsPlugin</sonar.pluginClass>
         <sonar.api.version>6.7.4</sonar.api.version>
         <sonar.packaging.version>1.18.0.372</sonar.packaging.version>
-        <json.version>20180813</json.version>
+        <json.version>20190722</json.version>
         <google.guava.version>28.1-jre</google.guava.version>
         <junit.jupiter.version>5.5.1</junit.jupiter.version>
         <mockito.version>3.0.0</mockito.version>

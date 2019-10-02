@@ -6,21 +6,27 @@ environment:
   SONAR_PROJECT_KEY: sonar-vcsparser-plugin
   SONAR_HOST_URL: https://sonarcloud.io
   SONAR_ORGANIZATION: roryclaasen-github
+  GH_PKG_TOKEN:
+    secure: Y3RyAQnNrUkgyrJshbzfV1jlIjV0B45IfxGERk/25Jr7q5+tjIoXuNfiguVB7LXo
+  GH_PKG_USRER: roryclaasen
 
 cache:
   - '%USERPROFILE%\.m2'
   - '%USERPROFILE%\.sonar\cache'
 
+before_build:
+  - ps: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+
 build_script:
-  - ps: mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" clean install "-DskipTests=true" "-Dmaven.javadoc.skip=true" -V
+  - ps: mvn "-Dproject.build.id=.$env:APPVEYOR_BUILD_NUMBER" clean install "-DskipTests=true" "-Dmaven.javadoc.skip=true" -V
 
 test_script:
-  - ps: mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" verify -e
+  - ps: mvn "-Dproject.build.id=.$env:APPVEYOR_BUILD_NUMBER" verify -e
 
 after_test:
   - ps: |
         if (-Not $env:APPVEYOR_PULL_REQUEST_TITLE) {
-          mvn "-Dproject.build.id=$env:APPVEYOR_BUILD_NUMBER" sonar:sonar "-Dsonar.projectKey=$env:SONAR_PROJECT_KEY" "-Dsonar.host.url=$env:SONAR_HOST_URL" "-Dsonar.organization=$env:SONAR_ORGANIZATION" "-Dsonar.branch.name=$env:APPVEYOR_REPO_BRANCH"
+          mvn "-Dproject.build.id=.$env:APPVEYOR_BUILD_NUMBER" sonar:sonar "-Dsonar.projectKey=$env:SONAR_PROJECT_KEY" "-Dsonar.host.url=$env:SONAR_HOST_URL" "-Dsonar.organization=$env:SONAR_ORGANIZATION" "-Dsonar.branch.name=$env:APPVEYOR_REPO_BRANCH"
         }
 
 on_finish:
@@ -38,6 +44,12 @@ on_finish:
 artifacts:
   - path: 'target\*.jar'
     name: plugin
+
+before_deploy:
+  - ps: |
+        if ($env:APPVEYOR_REPO_TAG) {
+          mvn --settings settings.xml deploy "-DskipTests=true"
+        }
 
 deploy:
   - provider: GitHub

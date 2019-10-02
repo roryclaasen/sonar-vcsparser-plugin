@@ -159,6 +159,7 @@
                         <exclude>**/pom.xml</exclude>
                         <exclude>**/appveyor.yml</exclude>
                         <exclude>**/headerDefinition.xml</exclude>
+                        <exclude>**/settings.xml</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
                     </excludes>

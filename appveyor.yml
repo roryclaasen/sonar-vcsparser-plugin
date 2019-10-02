@@ -6,6 +6,8 @@ environment:
   SONAR_PROJECT_KEY: sonar-vcsparser-plugin
   SONAR_HOST_URL: https://sonarcloud.io
   SONAR_ORGANIZATION: roryclaasen-github
+  GH_PKG_TOKEN:
+    secure: Y3RyAQnNrUkgyrJshbzfV1jlIjV0B45IfxGERk/25Jr7q5+tjIoXuNfiguVB7LXo
 
 cache:
   - '%USERPROFILE%\.m2'
@@ -38,6 +40,11 @@ on_finish:
 artifacts:
   - path: 'target\*.jar'
     name: plugin
+
+before_deploy:
+  - ps: |
+        mvn deploy -Dtoken=GH_PKG_TOKEN
+
 
 deploy:
   - provider: GitHub

@@ -71,6 +71,14 @@
         <url>https://github.com/roryclaasen/sonar-vcsparser-plugin/issues</url>
     </issueManagement>
 
+    <distributionManagement>
+        <repository>
+          <id>github</id>
+          <name>Rory Claasen - Apache Maven Packages</name>
+          <url>https://maven.pkg.github.com/roryclaasen/sonar-vcsparser-plugin</url>
+        </repository>
+     </distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.sonarsource.sonarqube</groupId>

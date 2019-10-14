@@ -47,7 +47,7 @@
         <maven.compiler.version>3.8.1</maven.compiler.version>
         <maven.surefire.version>2.22.2</maven.surefire.version>
         <mycila.license.version>3.0</mycila.license.version>
-        <jacoco.version>0.8.4</jacoco.version>
+        <jacoco.version>0.8.5</jacoco.version>
         <!-- sonar-project.properties -->
         <sonar.projetName>${project.name}</sonar.projetName>
         <sonar.links.homepage>${project.url}</sonar.links.homepage>

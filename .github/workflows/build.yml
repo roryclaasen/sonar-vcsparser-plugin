@@ -26,7 +26,7 @@ jobs:
     - name: Remove snapshot
       run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
     - name: Build with Maven
-      run: mvn -B package --file pom.xml "-Dproject.build.id=.{{ GITHUB_RUN_NUMBER }}"
+      run: mvn -B package --file pom.xml "-Dproject.build.id=.${{ env.GITHUB_RUN_NUMBER }}"
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:

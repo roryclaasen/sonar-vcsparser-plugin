@@ -32,3 +32,26 @@ jobs:
       with:
         name: sonar-vcsparser-plugin
         path: target/sonar-vcsparser-plugin*.jar
+
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - name: Remove snapshot
+      env:
+        SONAR_PROJECT_KEY: sonar-vcsparser-plugin
+        SONAR_HOST_URL: https://sonarcloud.io
+        SONAR_ORGANIZATION: roryclaasen-github
+      run: mvn "-Dproject.build.id=.{{ github.run_number }}" sonar:sonar "-Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}" "-Dsonar.host.url=${{ env.SONAR_HOST_URL }}" "-Dsonar.organization=${{ env.SONAR_ORGANIZATION }}" "-Dsonar.branch.name=${{ github.ref }}

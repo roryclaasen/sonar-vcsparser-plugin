@@ -49,9 +49,9 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
-    - name: Remove snapshot
+    - name: Sonar Scanner
       env:
         SONAR_PROJECT_KEY: sonar-vcsparser-plugin
         SONAR_HOST_URL: https://sonarcloud.io
         SONAR_ORGANIZATION: roryclaasen-github
-      run: mvn "-Dproject.build.id=.{{ github.run_number }}" sonar:sonar "-Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}" "-Dsonar.host.url=${{ env.SONAR_HOST_URL }}" "-Dsonar.organization=${{ env.SONAR_ORGANIZATION }}" "-Dsonar.branch.name=${{ github.ref }}
+      run: mvn "-Dproject.build.id=.${{ github.run_number }}" sonar:sonar "-Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }}" "-Dsonar.host.url=${{ env.SONAR_HOST_URL }}" "-Dsonar.organization=${{ env.SONAR_ORGANIZATION }}" "-Dsonar.branch.name=${{ github.ref }}"

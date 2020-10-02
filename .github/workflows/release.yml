@@ -61,16 +61,35 @@ jobs:
           draft: false
           prerelease: false
           body_path: ./README.md
+      # - name: Upload artifact
+      #   id: upload-release-asset-less
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: /target/sonar-vcsparser-plugin*.jar
+      #     asset_name: sonar-vcsparser-plugin.jar
+      #     asset_content_type: application/java-archive
       - name: Upload artifact
-        id: upload-release-asset-less
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v3
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: /target/sonar-vcsparser-plugin*.jar
-          asset_name: colors.less
-          asset_content_type: text/css
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const path = require('path');
+            const fs = require('fs');
+            const release_url = '${{ needs.create_release.outputs.upload_url }}';
+            const contentLength = filePath => fs.statSync(filePath).size;
+            for (let file of await fs.readdirSync('./target')) {
+              if (path.extname(file) === '.jar') {
+                console.log('uploadReleaseAsset', file);
+                const headers = { 'content-type': 'application/java-archive', 'content-length': contentLength(`./target/${file}`) };
+                await github.repos.uploadReleaseAsset({
+                  url: release_url,
+                  headers,
+                  name: file,
+                  file: fs.readFileSync(`./target/${file}`)
+                });
+              }
+            }
 
   publish-gpr:
     name: Publish to Github Package Registry

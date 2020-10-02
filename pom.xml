@@ -157,10 +157,10 @@
                         <exclude>**/README.md</exclude>
                         <exclude>**/LICENSE</exclude>
                         <exclude>**/pom.xml</exclude>
-                        <exclude>**/appveyor.yml</exclude>
                         <exclude>**/headerDefinition.xml</exclude>
                         <exclude>**/settings.xml</exclude>
                         <exclude>.github/**</exclude>
+                        <exclude>.vscode/**</exclude>
                         <exclude>src/test/resources/**</exclude>
                         <exclude>src/main/resources/**</exclude>
                     </excludes>

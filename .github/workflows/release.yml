@@ -1,0 +1,98 @@
+name: Deploy Package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  test:
+    name: Test before Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Set up JDK 11.x
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - name: Cache local Maven repository
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - name: Remove snapshot
+      run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml "-Dproject.build.id=.${{ github.run_number }}"
+
+  release-ghr:
+    name: Upload files to ${{ github.ref }}
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up JDK 11.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Remove snapshot
+        run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          body_path: /README.md
+      - name: Upload artifact
+        id: upload-release-asset-less
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /target/sonar-vcsparser-plugin*.jar
+          asset_name: colors.less
+          asset_content_type: text/css
+
+  publish-gpr:
+    name: Publish to Github Package Registry
+    needs: release-ghr
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up JDK 11.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Remove snapshot
+        run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+      - name: Publish package
+        run: mvn -B deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

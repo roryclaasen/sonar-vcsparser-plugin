@@ -1,7 +1,7 @@
 # Sonar Vcsparser Plugin
 
 [![Build status (master)][build master badge]][build master]
-[![AppVeyor tests (master)][tests master badge]][tests master]
+[![CodeQL (master)][qodeql master badge]][qodeql master]
 [![Codecov (master)][coverage master badge]][coverage master]
 [![Quality Gate Status (master)][quality master badge]][quality master]
 [![GitHub tag (latest)][tag latest badge]][tag latest]
@@ -74,7 +74,7 @@ Any changes to the json file will require a restart of SonarQube.
 
 ## Installation
 
-1. Download either the latest build from [GitHub release][tag latest] or from [AppVeyor][build master artifacts].
+1. Download the latest build from [GitHub release][tag latest].
 2. Move the plugin into plugins folder (`~\extensions\plugins`).
    Make sure to remove any old versions
 
@@ -87,12 +87,11 @@ View the documentation on [vcsparser](https://github.com/ericlemes/vcsparser#rea
 
 This project is licensed under the MIT License - see the [license file](LICENSE) for details
 
-[build master]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin/branch/master
-[build master artifacts]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin/branch/master/artifacts
-[build master badge]: https://img.shields.io/appveyor/ci/roryclaasen/sonar-vcsparser-plugin/master.svg?logo=appveyor
+[build master]: https://github.com/roryclaasen/sonar-vcsparser-plugin/actions?query=workflow%3A%22Build+%26+Test%22
+[build master badge]: https://github.com/roryclaasen/sonar-vcsparser-plugin/workflows/Build%20&%20Test/badge.svg
 
-[tests master]: https://ci.appveyor.com/project/roryclaasen/sonar-vcsparser-plugin/branch/master/tests
-[tests master badge]: https://img.shields.io/appveyor/tests/roryclaasen/sonar-vcsparser-plugin/master.svg?&logo=appveyor
+[qodeql master badge]: https://github.com/roryclaasen/sonar-vcsparser-plugin/workflows/CodeQL/badge.svg
+[qodeql master]: https://github.com/roryclaasen/sonar-vcsparser-plugin/actions?query=workflow%3ACodeQL
 
 [coverage master]: https://codecov.io/gh/roryclaasen/sonar-vcsparser-plugin/branch/master
 [coverage master badge]: https://img.shields.io/codecov/c/github/roryclaasen/sonar-vcsparser-plugin/master.svg?&logo=codecov

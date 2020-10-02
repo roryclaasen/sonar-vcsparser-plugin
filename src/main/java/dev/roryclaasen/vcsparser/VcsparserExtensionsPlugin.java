@@ -4,6 +4,7 @@
 package dev.roryclaasen.vcsparser;
 
 import org.sonar.api.Plugin;
+import org.sonar.api.utils.Version;
 import org.sonar.api.utils.log.Logger;
 
 import dev.roryclaasen.vcsparser.authors.AuthorListConverter;
@@ -39,18 +40,25 @@ public class VcsparserExtensionsPlugin implements Plugin {
 
 	@Override
 	public void define(Context context) {
-		log.debug("Registering Vcsparser Extensions");
-
-		PluginMetrics.loadAndAlter(environment, fileReader);
-
-		context.addExtension(LoggerCreator.class);
-		context.addExtension(PluginMetrics.class);
-		context.addExtension(JsonAuthorParser.class);
-		context.addExtension(AuthorListConverter.class);
-
-		context.addExtension(ComputeLinesFixedOverChangedMetric.class);
-		context.addExtension(ComputeNumAuthorsMetric.class);
-
-		context.addExtension(PostProjectAnalysisHook.class);
+		Version sonar = context.getSonarQubeVersion();
+		Version required = Version.create(6, 7, 4);
+		
+		if (sonar.isGreaterThanOrEqual(required)) {
+			log.debug("Registering Vcsparser Extensions");
+	
+			PluginMetrics.loadAndAlter(environment, fileReader);
+	
+			context.addExtension(LoggerCreator.class);
+			context.addExtension(PluginMetrics.class);
+			context.addExtension(JsonAuthorParser.class);
+			context.addExtension(AuthorListConverter.class);
+	
+			context.addExtension(ComputeLinesFixedOverChangedMetric.class);
+			context.addExtension(ComputeNumAuthorsMetric.class);
+	
+			context.addExtension(PostProjectAnalysisHook.class);
+		} else {
+			log.debug("Vcsparser needs SonarQube to be " + required.toString() + " or greater. Found " + sonar.toString());
+		}
 	}
 }

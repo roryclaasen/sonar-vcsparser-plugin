@@ -26,6 +26,13 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+    - name: Cache local Sonar files
+      uses: actions/cache@v2
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-sonar-
     - name: Remove snapshot
       run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
     - name: Build with Maven
@@ -41,36 +48,6 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: target/site/jacoco/jacoco.xml
         flags: unittests
-
-  sonar:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Set up JDK 11.x
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Cache local Maven repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-sonar-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-sonar-maven-
-    - name: Remove snapshot
-      run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
-    - name: Build with Maven (No Test)
-      run: mvn -B package --file pom.xml "-Dproject.build.id=.${{ github.run_number }}" "-DskipTests=true" "-Dmaven.javadoc.skip=true"
-    - name: Cache local Sonar files
-      uses: actions/cache@v2
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-sonar-
     - name: Sonar Scanner
       env:
         SONAR_PROJECT_KEY: sonar-vcsparser-plugin

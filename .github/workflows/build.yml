@@ -49,6 +49,17 @@ jobs:
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
           ${{ runner.os }}-maven-
+    - name: Remove snapshot
+      run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+    - name: Build with Maven (No Test)
+      run: mvn -B package --file pom.xml "-Dproject.build.id=.${{ github.run_number }}" "-DskipTests=true" "-Dmaven.javadoc.skip=true"
+    - name: Cache local Sonar files
+      uses: actions/cache@v2
+      with:
+        path: ~/.sonar/cache
+        key: ${{ runner.os }}-sonar-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-sonar-
     - name: Sonar Scanner
       env:
         SONAR_PROJECT_KEY: sonar-vcsparser-plugin

@@ -48,9 +48,9 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        key: ${{ runner.os }}-sonar-maven-${{ hashFiles('**/pom.xml') }}
         restore-keys: |
-          ${{ runner.os }}-maven-
+          ${{ runner.os }}-sonar-maven-
     - name: Remove snapshot
       run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
     - name: Build with Maven (No Test)

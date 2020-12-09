@@ -76,7 +76,7 @@ jobs:
           script: |
             const path = require('path');
             const fs = require('fs');
-            const release_url = '${{ needs.create_release.outputs.upload_url }}';
+            const release_url = '${{ steps.create_release.outputs.upload_url }}';
             const contentLength = filePath => fs.statSync(filePath).size;
             for (let file of await fs.readdirSync('./target')) {
               if (path.extname(file) === '.jar') {

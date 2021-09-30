@@ -10,23 +10,23 @@ jobs:
     name: Test before Deploy
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
-    - name: Set up JDK 11.x
-      uses: actions/setup-java@v1
-      with:
-        java-version: 11
-    - name: Cache local Maven repository
-      uses: actions/cache@v2
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-    - name: Remove snapshot
-      run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml "-Dproject.build.id=.${{ github.run_number }}"
+      - name: Checkout Code
+        uses: actions/checkout@v2
+      - name: Set up JDK 11.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Remove snapshot
+        run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml "-Dproject.build.id=.${{ github.run_number }}"
 
   release-ghr:
     name: Upload files to ${{ github.ref }}

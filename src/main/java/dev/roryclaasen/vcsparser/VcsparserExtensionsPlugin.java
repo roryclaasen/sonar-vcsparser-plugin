@@ -41,7 +41,7 @@ public class VcsparserExtensionsPlugin implements Plugin {
 	@Override
 	public void define(Context context) {
 		Version sonar = context.getSonarQubeVersion();
-		Version required = Version.create(6, 7, 4);
+		Version required = Version.create(8, 9, 2);
 
 		if (sonar.isGreaterThanOrEqual(required)) {
 			log.debug("Registering Vcsparser Extensions");

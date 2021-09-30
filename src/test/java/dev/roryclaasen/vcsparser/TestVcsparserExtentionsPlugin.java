@@ -37,7 +37,7 @@ public class TestVcsparserExtentionsPlugin {
 	@Mock
 	private IFileReader fileReader;
 
-	private Version currentApiVersion = Version.create(6, 7, 4);
+	private Version currentApiVersion = Version.create(8, 9, 2);
 
 	@BeforeEach
 	void setUp() {
@@ -51,7 +51,7 @@ public class TestVcsparserExtentionsPlugin {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "6.7.4", "6.7.5", "6.8", "7" })
+	@ValueSource(strings = { "8.9.2", "8.9.3", "9" })
 	void givenVcsparserExtentionsPlugin_whenDefineVersionOver_thenAddExtensions() {
 		plugin.define(context);
 
@@ -63,7 +63,7 @@ public class TestVcsparserExtentionsPlugin {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "0", "6", "6.7", "6.7.3" })
+	@ValueSource(strings = { "0", "8", "8.8", "8.9.1" })
 	void givenVcsparserExtentionsPlugin_whenDefineVersionBelow_thenDontExtensions(String version) {
 		when(context.getSonarQubeVersion()).thenReturn(Version.parse(version));
 

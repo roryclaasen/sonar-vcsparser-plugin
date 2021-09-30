@@ -4,5 +4,5 @@
 package dev.roryclaasen.vcsparser.system;
 
 public interface IEnvironment {
-	String getEnvironmentVariable(String variableName);
+    String getEnvironmentVariable(String variableName);
 }

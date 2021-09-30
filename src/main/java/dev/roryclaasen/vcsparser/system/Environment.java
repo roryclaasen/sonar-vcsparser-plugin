@@ -4,8 +4,8 @@
 package dev.roryclaasen.vcsparser.system;
 
 public class Environment implements IEnvironment {
-	@Override
-	public String getEnvironmentVariable(String variableName) {
-		return System.getenv(variableName);
-	}
+    @Override
+    public String getEnvironmentVariable(String variableName) {
+        return System.getenv(variableName);
+    }
 }

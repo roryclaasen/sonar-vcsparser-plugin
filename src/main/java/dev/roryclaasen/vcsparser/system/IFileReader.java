@@ -4,5 +4,5 @@
 package dev.roryclaasen.vcsparser.system;
 
 public interface IFileReader {
-	String readFile(String fileName);
+    String readFile(String fileName);
 }

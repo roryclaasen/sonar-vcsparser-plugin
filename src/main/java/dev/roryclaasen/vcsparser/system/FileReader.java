@@ -15,21 +15,21 @@ import org.sonar.api.utils.log.Logger;
 import dev.roryclaasen.vcsparser.LoggerCreator;
 
 public class FileReader implements IFileReader {
-	private final Logger log;
+    private final Logger log;
 
-	public FileReader(LoggerCreator loggerCreator) {
-		log = loggerCreator.get(FileReader.class);
-	}
+    public FileReader(LoggerCreator loggerCreator) {
+        log = loggerCreator.get(FileReader.class);
+    }
 
-	@Override
-	public String readFile(String fileName) {
-		try (InputStream stream = new FileInputStream(fileName);
-				InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
-				BufferedReader br = new BufferedReader(reader)) {
-			return br.lines().collect(Collectors.joining());
-		} catch (Exception e) {
-			log.error("Could not read file: " + fileName);
-			return null;
-		}
-	}
+    @Override
+    public String readFile(String fileName) {
+        try (InputStream stream = new FileInputStream(fileName);
+                InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
+                BufferedReader br = new BufferedReader(reader)) {
+            return br.lines().collect(Collectors.joining());
+        } catch (Exception e) {
+            log.error("Could not read file: " + fileName);
+            return null;
+        }
+    }
 }

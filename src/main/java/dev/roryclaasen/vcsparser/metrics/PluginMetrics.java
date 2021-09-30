@@ -18,60 +18,60 @@ import dev.roryclaasen.vcsparser.system.IFileReader;
 
 @SuppressWarnings("rawtypes")
 public class PluginMetrics implements Metrics {
-	protected static final Map<String, Metric> Metrics;
+    protected static final Map<String, Metric> Metrics;
 
-	public static final String CONFIG_ENV_VARIABLE = "SONAR_VCSPARSER_JSONDATA";
-	public static final String DEFAULT_DOMAIN = "Code Churn";
+    public static final String CONFIG_ENV_VARIABLE = "SONAR_VCSPARSER_JSONDATA";
+    public static final String DEFAULT_DOMAIN = "Code Churn";
 
-	static {
-		Metrics = new HashMap<String, Metric>();
-		for (PluginMetric details : PluginMetric.values()) {
-			for (MetricDate date : MetricDate.values()) {
-				Metrics.put(details.getKey() + date.getSuffix(), details.build(date.getSuffix(), date.getDescription()));
-			}
-		}
-	}
+    static {
+        Metrics = new HashMap<String, Metric>();
+        for (PluginMetric details : PluginMetric.values()) {
+            for (MetricDate date : MetricDate.values()) {
+                Metrics.put(details.getKey() + date.getSuffix(), details.build(date.getSuffix(), date.getDescription()));
+            }
+        }
+    }
 
-	public static void loadAndAlter(IEnvironment environment, IFileReader fileReader) {
-		String environmentVariable = environment.getEnvironmentVariable(CONFIG_ENV_VARIABLE);
+    public static void loadAndAlter(IEnvironment environment, IFileReader fileReader) {
+        String environmentVariable = environment.getEnvironmentVariable(CONFIG_ENV_VARIABLE);
 
-		if (environmentVariable == null)
-			return;
-		if (environmentVariable.trim().length() == 0)
-			return;
+        if (environmentVariable == null)
+            return;
+        if (environmentVariable.trim().length() == 0)
+            return;
 
-		String jsonString = fileReader.readFile(environmentVariable);
-		if (jsonString != null)
-			parseJson(jsonString);
-	}
+        String jsonString = fileReader.readFile(environmentVariable);
+        if (jsonString != null)
+            parseJson(jsonString);
+    }
 
-	private static void parseJson(String jsonString) {
-		JSONObject jsonData = new JSONObject(jsonString);
-		JSONArray metricsJson = jsonData.getJSONArray("metrics");
-		for (int i = 0; i < metricsJson.length(); i++) {
-			JSONObject metric = metricsJson.getJSONObject(i);
-			alterMetric(metric);
-		}
-	}
+    private static void parseJson(String jsonString) {
+        JSONObject jsonData = new JSONObject(jsonString);
+        JSONArray metricsJson = jsonData.getJSONArray("metrics");
+        for (int i = 0; i < metricsJson.length(); i++) {
+            JSONObject metric = metricsJson.getJSONObject(i);
+            alterMetric(metric);
+        }
+    }
 
-	private static void alterMetric(JSONObject jsonObject) {
-		String key = jsonObject.getString("key");
-		if (!Metrics.containsKey(key))
-			return;
-		Metric metric = Metrics.get(key);
+    private static void alterMetric(JSONObject jsonObject) {
+        String key = jsonObject.getString("key");
+        if (!Metrics.containsKey(key))
+            return;
+        Metric metric = Metrics.get(key);
 
-		if (jsonObject.has("name"))
-			metric.setName(jsonObject.getString("name"));
+        if (jsonObject.has("name"))
+            metric.setName(jsonObject.getString("name"));
 
-		if (jsonObject.has("description"))
-			metric.setDescription(jsonObject.getString("description"));
+        if (jsonObject.has("description"))
+            metric.setDescription(jsonObject.getString("description"));
 
-		if (jsonObject.has("domain"))
-			metric.setDomain(jsonObject.getString("domain"));
-	}
+        if (jsonObject.has("domain"))
+            metric.setDomain(jsonObject.getString("domain"));
+    }
 
-	@Override
-	public List<Metric> getMetrics() {
-		return new ArrayList<Metric>(Metrics.values());
-	}
+    @Override
+    public List<Metric> getMetrics() {
+        return new ArrayList<Metric>(Metrics.values());
+    }
 }

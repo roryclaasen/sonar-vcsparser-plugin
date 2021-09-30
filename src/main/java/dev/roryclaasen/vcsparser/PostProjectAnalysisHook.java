@@ -10,15 +10,15 @@ import dev.roryclaasen.vcsparser.measures.ComputeNumAuthorsMetric;
 
 @ComputeEngineSide
 public class PostProjectAnalysisHook implements PostProjectAnalysisTask {
-	private ComputeNumAuthorsMetric computeNumAuthorsMetric;
-		
-	public PostProjectAnalysisHook(ComputeNumAuthorsMetric computeNumAuthorsMetric) {
-		this.computeNumAuthorsMetric = computeNumAuthorsMetric;
-	}
-	
-	@Override
-	public void finished(ProjectAnalysis analysis) {
-		String projectKey = analysis.getProject().getKey();
-		computeNumAuthorsMetric.removeProjectCache(projectKey);
-	}
+    private ComputeNumAuthorsMetric computeNumAuthorsMetric;
+
+    public PostProjectAnalysisHook(ComputeNumAuthorsMetric computeNumAuthorsMetric) {
+        this.computeNumAuthorsMetric = computeNumAuthorsMetric;
+    }
+
+    @Override
+    public void finished(ProjectAnalysis analysis) {
+        String projectKey = analysis.getProject().getKey();
+        computeNumAuthorsMetric.removeProjectCache(projectKey);
+    }
 }

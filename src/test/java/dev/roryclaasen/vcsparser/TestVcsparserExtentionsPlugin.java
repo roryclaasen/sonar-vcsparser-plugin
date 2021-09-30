@@ -26,53 +26,53 @@ import dev.roryclaasen.vcsparser.system.IFileReader;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestVcsparserExtentionsPlugin {
-	private VcsparserExtensionsPlugin plugin;
+    private VcsparserExtensionsPlugin plugin;
 
-	@Mock
-	private Context context;
+    @Mock
+    private Context context;
 
-	@Mock
-	private IEnvironment environment;
+    @Mock
+    private IEnvironment environment;
 
-	@Mock
-	private IFileReader fileReader;
+    @Mock
+    private IFileReader fileReader;
 
-	private Version currentApiVersion = Version.create(8, 9, 2);
+    private Version currentApiVersion = Version.create(8, 9, 2);
 
-	@BeforeEach
-	void setUp() {
-		when(context.getSonarQubeVersion()).thenReturn(currentApiVersion);
+    @BeforeEach
+    void setUp() {
+        when(context.getSonarQubeVersion()).thenReturn(currentApiVersion);
 
-		when(environment.getEnvironmentVariable(anyString())).thenReturn(null);
+        when(environment.getEnvironmentVariable(anyString())).thenReturn(null);
 
-		plugin = new VcsparserExtensionsPlugin();
-		plugin.setEnvironment(environment);
-		plugin.setFileReader(fileReader);
-	}
+        plugin = new VcsparserExtensionsPlugin();
+        plugin.setEnvironment(environment);
+        plugin.setFileReader(fileReader);
+    }
 
-	@ParameterizedTest
-	@ValueSource(strings = { "8.9.2", "8.9.3", "9" })
-	void givenVcsparserExtentionsPlugin_whenDefineVersionOver_thenAddExtensions() {
-		plugin.define(context);
+    @ParameterizedTest
+    @ValueSource(strings = { "8.9.2", "8.9.3", "9" })
+    void givenVcsparserExtentionsPlugin_whenDefineVersionOver_thenAddExtensions() {
+        plugin.define(context);
 
-		verify(context).addExtension(PluginMetrics.class);
-		verify(context).addExtension(AuthorListConverter.class);
-		verify(context).addExtension(PostProjectAnalysisHook.class);
-		verify(context).addExtension(ComputeLinesFixedOverChangedMetric.class);
-		verify(context).addExtension(ComputeNumAuthorsMetric.class);
-	}
+        verify(context).addExtension(PluginMetrics.class);
+        verify(context).addExtension(AuthorListConverter.class);
+        verify(context).addExtension(PostProjectAnalysisHook.class);
+        verify(context).addExtension(ComputeLinesFixedOverChangedMetric.class);
+        verify(context).addExtension(ComputeNumAuthorsMetric.class);
+    }
 
-	@ParameterizedTest
-	@ValueSource(strings = { "0", "8", "8.8", "8.9.1" })
-	void givenVcsparserExtentionsPlugin_whenDefineVersionBelow_thenDontExtensions(String version) {
-		when(context.getSonarQubeVersion()).thenReturn(Version.parse(version));
+    @ParameterizedTest
+    @ValueSource(strings = { "0", "8", "8.8", "8.9.1" })
+    void givenVcsparserExtentionsPlugin_whenDefineVersionBelow_thenDontExtensions(String version) {
+        when(context.getSonarQubeVersion()).thenReturn(Version.parse(version));
 
-		plugin.define(context);
+        plugin.define(context);
 
-		verify(context, times(0)).addExtension(PluginMetrics.class);
-		verify(context, times(0)).addExtension(AuthorListConverter.class);
-		verify(context, times(0)).addExtension(PostProjectAnalysisHook.class);
-		verify(context, times(0)).addExtension(ComputeLinesFixedOverChangedMetric.class);
-		verify(context, times(0)).addExtension(ComputeNumAuthorsMetric.class);
-	}
+        verify(context, times(0)).addExtension(PluginMetrics.class);
+        verify(context, times(0)).addExtension(AuthorListConverter.class);
+        verify(context, times(0)).addExtension(PostProjectAnalysisHook.class);
+        verify(context, times(0)).addExtension(ComputeLinesFixedOverChangedMetric.class);
+        verify(context, times(0)).addExtension(ComputeNumAuthorsMetric.class);
+    }
 }

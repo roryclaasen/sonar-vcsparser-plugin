@@ -19,32 +19,32 @@ import dev.roryclaasen.vcsparser.measures.ComputeNumAuthorsMetric;
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestPostProjectAnalysisHook {
-	@Mock
-	private ProjectAnalysis projectAnalysis;
+    @Mock
+    private ProjectAnalysis projectAnalysis;
 
-	@Mock
-	private Project project;
+    @Mock
+    private Project project;
 
-	@Mock
-	private ComputeNumAuthorsMetric computeNumAuthorsMetric;
+    @Mock
+    private ComputeNumAuthorsMetric computeNumAuthorsMetric;
 
-	private static String SOME_PROJECT_KEY = "SomeProjectKey";
+    private static String SOME_PROJECT_KEY = "SomeProjectKey";
 
-	private PostProjectAnalysisHook projectAnalysisHook;
+    private PostProjectAnalysisHook projectAnalysisHook;
 
-	@BeforeEach
-	void setUp() {
-		when(projectAnalysis.getProject()).thenReturn(project);
+    @BeforeEach
+    void setUp() {
+        when(projectAnalysis.getProject()).thenReturn(project);
 
-		when(project.getKey()).thenReturn(SOME_PROJECT_KEY);
+        when(project.getKey()).thenReturn(SOME_PROJECT_KEY);
 
-		projectAnalysisHook = new PostProjectAnalysisHook(computeNumAuthorsMetric);
-	}
+        projectAnalysisHook = new PostProjectAnalysisHook(computeNumAuthorsMetric);
+    }
 
-	@Test
-	void givenPostProjectAnalysisHook_whenFinished_thenCallCleanCache() {
-		projectAnalysisHook.finished(projectAnalysis);
+    @Test
+    void givenPostProjectAnalysisHook_whenFinished_thenCallCleanCache() {
+        projectAnalysisHook.finished(projectAnalysis);
 
-		verify(computeNumAuthorsMetric, times(1)).removeProjectCache(SOME_PROJECT_KEY);
-	}
+        verify(computeNumAuthorsMetric, times(1)).removeProjectCache(SOME_PROJECT_KEY);
+    }
 }

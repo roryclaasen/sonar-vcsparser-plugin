@@ -10,18 +10,18 @@ import org.junit.jupiter.api.Test;
 import org.sonar.api.utils.log.Logger;
 
 public class TestLoggerCreator {
-	private LoggerCreator loggerCreator;
+    private LoggerCreator loggerCreator;
 
-	@BeforeEach
-	void setUp() {
-		loggerCreator = new LoggerCreator();
-	}
+    @BeforeEach
+    void setUp() {
+        loggerCreator = new LoggerCreator();
+    }
 
-	@Test
-	void givenLoggerCreator_whenGet_thenReturnLogger() {
-		Object log = loggerCreator.get(TestLoggerCreator.class);
+    @Test
+    void givenLoggerCreator_whenGet_thenReturnLogger() {
+        Object log = loggerCreator.get(TestLoggerCreator.class);
 
-		assertNotNull(log);
-		assertTrue(log instanceof Logger);
-	}
+        assertNotNull(log);
+        assertTrue(log instanceof Logger);
+    }
 }

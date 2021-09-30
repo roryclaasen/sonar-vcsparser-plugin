@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class AuthorData {
-	public final LocalDateTime date;
-	public final List<Author> authors;
+    public final LocalDateTime date;
+    public final List<Author> authors;
 
-	public AuthorData(LocalDateTime date, List<Author> authors) {
-		this.date = date;
-		this.authors = authors;
-	}
+    public AuthorData(LocalDateTime date, List<Author> authors) {
+        this.date = date;
+        this.authors = authors;
+    }
 }

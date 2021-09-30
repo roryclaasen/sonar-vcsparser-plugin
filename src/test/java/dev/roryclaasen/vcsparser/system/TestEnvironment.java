@@ -9,15 +9,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TestEnvironment {
-	private Environment environment;
+    private Environment environment;
 
-	@BeforeEach
-	void setUp() {
-		environment = new Environment();
-	}
+    @BeforeEach
+    void setUp() {
+        environment = new Environment();
+    }
 
-	@Test
-	void givenEnvironment_whenGettingExistingVariableShouldReturnValue() {
-		assertNotNull(environment.getEnvironmentVariable("PATH"));
-	}
+    @Test
+    void givenEnvironment_whenGettingExistingVariableShouldReturnValue() {
+        assertNotNull(environment.getEnvironmentVariable("PATH"));
+    }
 }

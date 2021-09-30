@@ -23,94 +23,94 @@ import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinitionContext
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestComputeLinesFixedOverChangedMetric {
-	@Mock
-	private Builder defBuilder;
+    @Mock
+    private Builder defBuilder;
 
-	@Mock
-	private MeasureComputerDefinitionContext defContext;
+    @Mock
+    private MeasureComputerDefinitionContext defContext;
 
-	@Mock
-	private MeasureComputerDefinition defComputer;
+    @Mock
+    private MeasureComputerDefinition defComputer;
 
-	@Mock
-	private MeasureComputerContext context;
+    @Mock
+    private MeasureComputerContext context;
 
-	@Mock
-	private Measure measure;
+    @Mock
+    private Measure measure;
 
-	private ComputeLinesFixedOverChangedMetric computer;
+    private ComputeLinesFixedOverChangedMetric computer;
 
-	private final String linesChangedKey = "SomeLinesChangedKey";
-	private final String linesChangedFixedKey = "SomeLinesFixedKey";
-	private final String linesFixedOverChangedKey = "SomeLinesFixedOverChangedKey";
+    private final String linesChangedKey = "SomeLinesChangedKey";
+    private final String linesChangedFixedKey = "SomeLinesFixedKey";
+    private final String linesFixedOverChangedKey = "SomeLinesFixedOverChangedKey";
 
-	@BeforeEach
-	void setUp() {
-		when(defContext.newDefinitionBuilder()).thenReturn(defBuilder);
+    @BeforeEach
+    void setUp() {
+        when(defContext.newDefinitionBuilder()).thenReturn(defBuilder);
 
-		when(defBuilder.setInputMetrics(any(String.class))).thenReturn(defBuilder);
-		when(defBuilder.setOutputMetrics(any(String.class))).thenReturn(defBuilder);
-		when(defBuilder.build()).thenReturn(defComputer);
+        when(defBuilder.setInputMetrics(any(String.class))).thenReturn(defBuilder);
+        when(defBuilder.setOutputMetrics(any(String.class))).thenReturn(defBuilder);
+        when(defBuilder.build()).thenReturn(defComputer);
 
-		when(context.getMeasure(anyString())).thenReturn(measure);
+        when(context.getMeasure(anyString())).thenReturn(measure);
 
-		when(measure.getIntValue()).thenReturn(0);
+        when(measure.getIntValue()).thenReturn(0);
 
-		computer = new ComputeLinesFixedOverChangedMetric();
-	}
+        computer = new ComputeLinesFixedOverChangedMetric();
+    }
 
-	@Test
-	void givenComputeLinesFixedOverChangedMetric_whenDefine_thenReturnMeasureComputerDefinition() {
-		MeasureComputerDefinition defineComputer = computer.define(defContext);
+    @Test
+    void givenComputeLinesFixedOverChangedMetric_whenDefine_thenReturnMeasureComputerDefinition() {
+        MeasureComputerDefinition defineComputer = computer.define(defContext);
 
-		verify(defBuilder, times(1)).build();
-		assertEquals(defComputer, defineComputer);
-	}
+        verify(defBuilder, times(1)).build();
+        assertEquals(defComputer, defineComputer);
+    }
 
-	@Test
-	void givenComputeLinesFixedOverChangedMetric_whenComputeLinesChangedNull_thenDoNotAddMeasure() {
-		when(context.getMeasure(linesChangedKey)).thenReturn(null);
+    @Test
+    void givenComputeLinesFixedOverChangedMetric_whenComputeLinesChangedNull_thenDoNotAddMeasure() {
+        when(context.getMeasure(linesChangedKey)).thenReturn(null);
 
-		computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
+        computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
 
-		verify(measure, times(0)).getIntValue();
-		verify(context, times(0)).addMeasure(eq(linesChangedFixedKey), anyInt());
-	}
+        verify(measure, times(0)).getIntValue();
+        verify(context, times(0)).addMeasure(eq(linesChangedFixedKey), anyInt());
+    }
 
-	@Test
-	void givenComputeLinesFixedOverChangedMetric_whenComputeLinesChangedZero_thenDoNotAddMeasure() {
-		computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
+    @Test
+    void givenComputeLinesFixedOverChangedMetric_whenComputeLinesChangedZero_thenDoNotAddMeasure() {
+        computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
 
-		verify(context, times(0)).addMeasure(eq(linesChangedFixedKey), anyInt());
-	}
+        verify(context, times(0)).addMeasure(eq(linesChangedFixedKey), anyInt());
+    }
 
-	@Test
-	void givenComputeLinesFixedOverChangedMetric_whenLinesChangedFixedNull_thenLinesChangedFixedZero() {
-		when(context.getMeasure(linesChangedFixedKey)).thenReturn(null);
-		when(measure.getIntValue()).thenReturn(2);
+    @Test
+    void givenComputeLinesFixedOverChangedMetric_whenLinesChangedFixedNull_thenLinesChangedFixedZero() {
+        when(context.getMeasure(linesChangedFixedKey)).thenReturn(null);
+        when(measure.getIntValue()).thenReturn(2);
 
-		computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
+        computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
 
-		verify(context, times(1)).addMeasure(eq(linesFixedOverChangedKey), eq(0.0));
-	}
+        verify(context, times(1)).addMeasure(eq(linesFixedOverChangedKey), eq(0.0));
+    }
 
-	@Test
-	void givenComputeLinesFixedOverChangedMetric_whenCompute_thenAddMeasure() {
-		when(measure.getIntValue()).thenReturn(2, 4);
+    @Test
+    void givenComputeLinesFixedOverChangedMetric_whenCompute_thenAddMeasure() {
+        when(measure.getIntValue()).thenReturn(2, 4);
 
-		computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
+        computer.compute(context, linesChangedKey, linesChangedFixedKey, linesFixedOverChangedKey);
 
-		verify(context, times(1)).addMeasure(eq(linesFixedOverChangedKey), eq((4 * 100) / 2.0));
-	}
+        verify(context, times(1)).addMeasure(eq(linesFixedOverChangedKey), eq((4 * 100) / 2.0));
+    }
 
-	@Test
-	void givenComputeLinesFixedOverChangedMetric_whenCompute_LoopThroughDates() {
-		String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
+    @Test
+    void givenComputeLinesFixedOverChangedMetric_whenCompute_LoopThroughDates() {
+        String[] linesChanged = getAllDatesForMetric("vcsparser_lineschanged");
 
-		computer.compute(context);
+        computer.compute(context);
 
-		for (String key : linesChanged) {
-			verify(context, times(1)).getMeasure(key);
-		}
-	}
+        for (String key : linesChanged) {
+            verify(context, times(1)).getMeasure(key);
+        }
+    }
 }

@@ -11,7 +11,7 @@ import org.sonar.api.utils.log.Loggers;
 @ServerSide
 @ComputeEngineSide
 public class LoggerCreator {
-	public Logger get(Class<?> name) {
-		return Loggers.get(name);
-	}
+    public Logger get(Class<?> name) {
+        return Loggers.get(name);
+    }
 }

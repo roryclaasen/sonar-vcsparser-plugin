@@ -15,12 +15,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.sonar.api.utils.log.Logger;
 
 import dev.roryclaasen.vcsparser.LoggerCreator;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestJsonAuthorParser {
 	@Mock
 	private LoggerCreator loggerCreator;
@@ -34,7 +38,6 @@ public class TestJsonAuthorParser {
 
 	@BeforeEach
 	void SetUp() {
-		MockitoAnnotations.initMocks(this);
 
 		when(loggerCreator.get(AuthorListConverter.class)).thenReturn(logger);
 

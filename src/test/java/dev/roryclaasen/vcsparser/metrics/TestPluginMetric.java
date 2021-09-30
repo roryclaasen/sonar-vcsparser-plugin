@@ -12,13 +12,13 @@ import org.sonar.api.measures.Metric;
 public class TestPluginMetric {
 	private final String keySuffix = "SomeKeySuffix";
 	private final String nameSuffix = "SomeNameSuffix";
-	
+
 	@SuppressWarnings("rawtypes")
 	@ParameterizedTest
 	@EnumSource(PluginMetric.class)
 	void givenPluginMetric_whenBuild_thenCreateMetricCorrectly(PluginMetric metric) {
 		Metric builtMetric = metric.build(keySuffix, nameSuffix);
-		
+
 		assertEquals(metric.getKey() + keySuffix, builtMetric.getKey());
 		assertEquals(metric.getName() + nameSuffix, builtMetric.getName());
 		assertEquals(metric.getDescription() + nameSuffix, builtMetric.getDescription());

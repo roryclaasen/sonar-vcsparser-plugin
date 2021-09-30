@@ -16,11 +16,11 @@ public class TestLoggerCreator {
 	void setUp() {
 		loggerCreator = new LoggerCreator();
 	}
-	
+
 	@Test
 	void givenLoggerCreator_whenGet_thenReturnLogger() {
 		Object log = loggerCreator.get(TestLoggerCreator.class);
-		
+
 		assertNotNull(log);
 		assertTrue(log instanceof Logger);
 	}

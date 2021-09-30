@@ -10,14 +10,18 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.sonar.api.ce.measure.Measure;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerContext;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinition;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinition.Builder;
 import org.sonar.api.ce.measure.MeasureComputer.MeasureComputerDefinitionContext;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestComputeLinesFixedOverChangedMetric {
 	@Mock
 	private Builder defBuilder;
@@ -42,8 +46,6 @@ public class TestComputeLinesFixedOverChangedMetric {
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.initMocks(this);
-
 		when(defContext.newDefinitionBuilder()).thenReturn(defBuilder);
 
 		when(defBuilder.setInputMetrics(any(String.class))).thenReturn(defBuilder);

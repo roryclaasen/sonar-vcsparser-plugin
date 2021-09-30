@@ -21,10 +21,12 @@ import java.util.TreeMap;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.sonar.api.ce.measure.Component;
 import org.sonar.api.ce.measure.Component.Type;
 import org.sonar.api.ce.measure.Measure;
@@ -40,6 +42,8 @@ import dev.roryclaasen.vcsparser.authors.JsonAuthorParser;
 import dev.roryclaasen.vcsparser.metrics.MetricDate;
 import dev.roryclaasen.vcsparser.metrics.PluginMetric;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestComputeNumAuthorsMetric {
 	@Mock
 	private Builder defBuilder;
@@ -83,8 +87,6 @@ public class TestComputeNumAuthorsMetric {
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.initMocks(this);
-
 		when(defContext.newDefinitionBuilder()).thenReturn(defBuilder);
 
 		when(defBuilder.setInputMetrics(any(String.class))).thenReturn(defBuilder);

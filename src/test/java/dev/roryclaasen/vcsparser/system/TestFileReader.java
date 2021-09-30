@@ -11,12 +11,16 @@ import java.io.File;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.sonar.api.utils.log.Logger;
 
 import dev.roryclaasen.vcsparser.LoggerCreator;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestFileReader {
 	@Mock
 	private LoggerCreator loggerCreator;
@@ -28,8 +32,6 @@ public class TestFileReader {
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.initMocks(this);
-
 		when(loggerCreator.get(FileReader.class)).thenReturn(logger);
 
 		fileReader = new FileReader(loggerCreator);

@@ -42,20 +42,20 @@ public class VcsparserExtensionsPlugin implements Plugin {
 	public void define(Context context) {
 		Version sonar = context.getSonarQubeVersion();
 		Version required = Version.create(6, 7, 4);
-		
+
 		if (sonar.isGreaterThanOrEqual(required)) {
 			log.debug("Registering Vcsparser Extensions");
-	
+
 			PluginMetrics.loadAndAlter(environment, fileReader);
-	
+
 			context.addExtension(LoggerCreator.class);
 			context.addExtension(PluginMetrics.class);
 			context.addExtension(JsonAuthorParser.class);
 			context.addExtension(AuthorListConverter.class);
-	
+
 			context.addExtension(ComputeLinesFixedOverChangedMetric.class);
 			context.addExtension(ComputeNumAuthorsMetric.class);
-	
+
 			context.addExtension(PostProjectAnalysisHook.class);
 		} else {
 			log.debug("Vcsparser needs SonarQube to be " + required.toString() + " or greater. Found " + sonar.toString());

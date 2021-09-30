@@ -12,13 +12,17 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
 import org.sonar.api.measures.Metric;
 
 import dev.roryclaasen.vcsparser.system.IEnvironment;
 import dev.roryclaasen.vcsparser.system.IFileReader;
 
+@ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = org.mockito.quality.Strictness.LENIENT)
 public class TestPluginMetrics {
 	@Mock
 	private IEnvironment environment;
@@ -37,8 +41,6 @@ public class TestPluginMetrics {
 
 	@BeforeEach
 	void setUp() {
-		MockitoAnnotations.initMocks(this);
-
 		when(environment.getEnvironmentVariable(anyString())).thenReturn(SomeFilePath);
 
 		pluginMetrics = new PluginMetrics();
@@ -57,7 +59,7 @@ public class TestPluginMetrics {
 	@Test
 	void givenPluginMetrics_whenClassInitialize_thenCreateAndPutMetrics() {
 		PluginMetrics.Metrics.remove(someMetricKey);
-		
+
 		int dateSize = MetricDate.values().length;
 		int measureslength = PluginMetric.values().length;
 
